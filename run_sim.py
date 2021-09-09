@@ -15,16 +15,19 @@ import generate_tasks
 import assign_tasks
 import simple_solve
 import calc_fd
+from scipy.interpolate import griddata
+from mpl_toolkits import mplot3d
+from matplotlib import cm
 
 #Parameters
 numfuncs = 9
-numagents = 5
-numtasks = 5
+numagents = 20
+numtasks = 10
 agspread = 10
 anorm = 10
 tnorm = 10
-numrepeats = 1
-stop = 3
+numrepeats = 5
+stop = 5e2
 
 adivvals = np.logspace(-1, 3, 20)
 gdivvals = np.logspace(-1, 3, 10)
@@ -60,11 +63,32 @@ for adiv in adivvals:
         
         gi+=1
     ai+=1
-
+"""
 #plot results
 fig = plt.figure()
 ax = fig.add_subplot(projection='3d')
-ax.scatter(IFD,DFD, meansn)
+#ax.scatter(IFD,DFD, meansn)
+ax.surface_plot(IFD, DFD, meansn, cmap=cm.coolwarm,linewidth=0, antialiased=False)
 ax.set_xlabel('IFD')
 ax.set_ylabel('DFD')
 ax.set_zlabel('Set to 0')
+"""
+#surface plot
+# target grid to interpolate to
+xi = np.arange(0,1.01,0.001)
+yi = np.arange(10,1000.01,0.001)
+xi,yi = np.meshgrid(xi,yi)
+
+# interpolate
+#zi = griddata((IFD.flatten(),DFD.flatten()),meansn,(xi,yi),method='linear')
+fig2 = plt.figure()
+axes = fig2.gca(projection ='3d')
+axes.plot_surface(IFD, DFD, meansn)
+#plt.plot(x,y,'k.')
+plt.xlabel('IFD',fontsize=10)
+plt.ylabel('DFD',fontsize=10)
+axes.set_zlabel('Time', fontsize=10)
+plt.title("Functional Diversity")
+plt.figtext(.5, 0.0, "stop = " + str(stop) + ", num tasks = " + str(numtasks) +  ", num agents = " + str(numagents) + ", num repeats = " + str(numrepeats), ha="center", fontsize=10)
+plt.show()
+

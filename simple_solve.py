@@ -10,10 +10,14 @@ import numpy as np
 def solve_tasks(agents, tasks, index, stop):
     time = 0
     #check to see if all tasks are complete
-    while np.any([np.any(task > 0) for task in tasks]) or time != stop:
+    print("entering while loop")
+    while np.any([np.any(task > 0) for task in tasks]) and time != stop:
+        print("time = ", time)
         i = 0
         for a in agents:
+            print("agent works on task")
             tasks[index[i]]= tasks[index[i]]- agents[i]
+            print("task progress:", tasks)
             i+=1
         time += 1
     return time

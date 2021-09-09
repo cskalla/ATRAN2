@@ -65,14 +65,14 @@ import calc_fd
 
 #Parameters:
 numfuncs = 9
-numagents = 10
+numagents = 2
 #gDiv = np.repeat(1/nfunc, 9)
 gDiv = [1/numfuncs for i in range(0,9)]
 anorm = 10; #The sum of capabilities of agents,
 aDiv = [100,10]#This is where intra-agent diversity can be set: the higher, the more diverse
 tnorm = 10
-numtasks=10
-stop = 35
+numtasks=2
+stop = 2
 
 
 
@@ -85,4 +85,5 @@ tasks = generate_tasks.gen_tasks(numfuncs, numtasks, tnorm)
 #Assign tasks to agents
 index = assign_tasks.assign_tasks(agents, tasks)
 #work on tasks
+print("calling simple solve")
 t = simple_solve.solve_tasks(agents, tasks, index, stop)  
