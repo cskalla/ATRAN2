@@ -6,6 +6,7 @@ Created on Tue Sep  7 13:22:59 2021
 @author: carolineskalla
 """
 import numpy as np
+import assign_tasks
 
 def solve_tasks(agents, tasks, index, stop):
     time = 0
@@ -15,6 +16,8 @@ def solve_tasks(agents, tasks, index, stop):
         print("time = ", time)
         i = 0
         for a in agents:
+            if np.all(tasks[index[i]] < 0):
+                index[i] = assign_tasks.new_task(agents, tasks)
             print("agent works on task")
             tasks[index[i]]= tasks[index[i]]- agents[i]
             print("task progress:", tasks)

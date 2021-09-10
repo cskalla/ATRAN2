@@ -21,7 +21,7 @@ from matplotlib import cm
 
 #Parameters
 numfuncs = 9
-numagents = 20
+numagents = 100
 numtasks = 10
 agspread = 10
 anorm = 10
@@ -53,7 +53,7 @@ for adiv in adivvals:
             #Generate tasks
             tasks = generate_tasks.gen_tasks(numfuncs, numtasks, tnorm)
             #Assign tasks to agents
-            index = assign_tasks.assign_tasks(agents, tasks)
+            index = assign_tasks.init_assign_tasks(agents, tasks)
             #work on tasks
             sn[ridx] = simple_solve.solve_tasks(agents, tasks, index, stop)    
         #save results for trial
@@ -75,15 +75,16 @@ ax.set_zlabel('Set to 0')
 """
 #surface plot
 # target grid to interpolate to
-xi = np.arange(0,1.01,0.001)
-yi = np.arange(10,1000.01,0.001)
+xi = np.arange(0,1.01,0.0001)
+yi = np.arange(0,1.01,0.0001)
 xi,yi = np.meshgrid(xi,yi)
 
 # interpolate
-#zi = griddata((IFD.flatten(),DFD.flatten()),meansn,(xi,yi),method='linear')
+zi = griddata((IFD.flatten(),DFD.flatten()),meansn.flatten(),(xi,yi),method='linear')
 fig2 = plt.figure()
 axes = fig2.gca(projection ='3d')
 axes.plot_surface(IFD, DFD, meansn)
+
 #plt.plot(x,y,'k.')
 plt.xlabel('IFD',fontsize=10)
 plt.ylabel('DFD',fontsize=10)
@@ -91,4 +92,3 @@ axes.set_zlabel('Time', fontsize=10)
 plt.title("Functional Diversity")
 plt.figtext(.5, 0.0, "stop = " + str(stop) + ", num tasks = " + str(numtasks) +  ", num agents = " + str(numagents) + ", num repeats = " + str(numrepeats), ha="center", fontsize=10)
 plt.show()
-
