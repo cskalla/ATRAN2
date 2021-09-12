@@ -75,7 +75,7 @@ numtasks=2
 stop = 2
 
 
-
+"""
  #generate agents
 agents = generate_agents.gen_agents(numfuncs, numagents, aDiv, (np.exp(-(np.array(range(0, numfuncs))**2/gDiv)))/sum(np.exp(-(np.array(range(0, numfuncs))**2/gDiv))), anorm)
 #Calculate and store diversity values
@@ -87,3 +87,16 @@ index = assign_tasks.assign_tasks(agents, tasks)
 #work on tasks
 print("calling simple solve")
 t = simple_solve.solve_tasks(agents, tasks, index, stop)  
+"""
+
+agents =np.array([[1,1,1], [1,1,1], [1,1,1]])
+
+teamSum = 0
+for a in agents:
+    agentSum = 0
+    agentTotal = sum(a)
+    for skill in a:
+        percent = skill/agentTotal
+        agentSum += (percent**2)
+    teamSum += (1 - agentSum)
+IFD = teamSum/len(agents)

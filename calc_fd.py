@@ -37,8 +37,11 @@ def calc_fd(agents):
     # [~, I] = max(agents, [], 2)
     I = [0]*len(agents)
     for a in range(len(agents)):
-        m = max(agents[a,:])
-        I[a] = np.where(agents[a,:] == np.amax(agents[a,:]))      
+        #m = max(agents[a,:])
+        maxLocs = np.where(agents[a,:] == np.amax(agents[a,:])) 
+        
+        I[a] = np.where(agents[a,:] == np.amax(agents[a,:])) if len(maxLocs[0]) == 1 else maxLocs[0][0]  
+        
     #T = tabulate(I);
     T = np.array(np.unique(I, return_counts=True)).T
     
@@ -57,8 +60,17 @@ def calc_fd(agents):
     #Calculate IFD
     #IFDS = 1 - sum((agents./sum(agents,2)).^2, 2)
     #IFDS = 1 - agents/agents.sum(axis=1)
-    IFDS = 1 - np.array([sum(((a/sum(a))**2)) for a in agents])
-    IFD = np.mean(IFDS)
+    #find the total skill for each agent
+    #IFDS = 1 - np.array([sum(((a/sum(a))**2)) for a in agents])
+    teamSum = 0
+    for a in agents:
+        agentSum = 0
+        agentTotal = sum(a)
+        for skill in a:
+            percent = skill/agentTotal
+            agentSum += (percent**2)
+        teamSum += (1 - agentSum)
+    IFD = teamSum/len(agents)
     return [DFD, IFD]
 
 #x= calc_fd(np.array([[0.4,0.6,0,0], [0,0,0.6, 0.4]]))
