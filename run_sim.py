@@ -21,8 +21,8 @@ from matplotlib import cm
 
 #Parameters
 numfuncs = 9
-numagents = 100
-numtasks = 10
+numagents = 10
+numtasks = 100
 agspread = 10
 anorm = 10
 tnorm = 10
