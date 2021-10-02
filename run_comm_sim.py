@@ -27,7 +27,7 @@ agspread = 10
 anorm = 10
 tnorm = 10
 numrepeats = 5
-stop = 5e2
+stop = 500
 
 adivvals = np.logspace(-1, 3, 20)
 gdivvals = np.logspace(-1, 3, 10)
@@ -55,7 +55,7 @@ for adiv in adivvals:
             #Assign tasks to agents
             index = assign_tasks.init_assign_tasks_comm(agents, tasks)
             #work on tasks
-            sn[ridx] = simple_solve.solve_tasks(agents, tasks, index, stop)    
+            sn[ridx] = simple_solve.solve_tasks_comm(agents, tasks, index, stop)    
         #save results for trial
         minsn[ai, gi] = min(sn)
         maxsn[ai, gi] = max(sn)
@@ -89,6 +89,6 @@ axes.plot_surface(IFD, DFD, meansn)
 plt.xlabel('IFD',fontsize=10)
 plt.ylabel('DFD',fontsize=10)
 axes.set_zlabel('Time', fontsize=10)
-plt.title("Functional Diversity")
-plt.figtext(.5, 0.0, "stop = " + str(stop) + ", num tasks = " + str(numtasks) +  ", num agents = " + str(numagents) + ", num repeats = " + str(numrepeats), ha="center", fontsize=10)
+plt.title("Functional Diversity - Full communication")
+plt.figtext(.5, 0.0, "stop = " + str(stop) + ", num tasks = " + str(numtasks) +  ", num agents = " + str(numagents) + ", Emergency stop = " + str(stop) + ", num repeats = " + str(numrepeats), ha="center", fontsize=10)
 plt.show()

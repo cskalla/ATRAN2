@@ -62,17 +62,36 @@ import generate_tasks
 import assign_tasks
 import simple_solve
 import calc_fd
+import similarity
 
 #Parameters:
 numfuncs = 9
-numagents = 2
+numagents = 10
 #gDiv = np.repeat(1/nfunc, 9)
 gDiv = [1/numfuncs for i in range(0,9)]
 anorm = 10; #The sum of capabilities of agents,
 aDiv = [100,10]#This is where intra-agent diversity can be set: the higher, the more diverse
 tnorm = 10
-numtasks=2
-stop = 2
+numtasks=100
+stop = 5000
+
+
+#generate agents
+agents = generate_agents.gen_agents(numfuncs, numagents, aDiv, (np.exp(-(np.array(range(0, numfuncs))**2/gDiv)))/sum(np.exp(-(np.array(range(0, numfuncs))**2/gDiv))), anorm)
+print("agent1", agents[0])
+print("agent2", agents[1])
+print(similarity.similar(agents[0], agents[1]))
+#Calculate and store diversity values
+#[DFD, IFD] = calc_fd.calc_fd(agents)
+
+
+#Generate tasks
+#tasks = generate_tasks.gen_tasks(numfuncs, numtasks, tnorm)
+#Assign tasks to agents
+#index = assign_tasks.init_assign_tasks_comm(agents, tasks)
+#work on tasks
+#score = simple_solve.solve_tasks_comm(agents, tasks, index, stop)    
+
 
 
 """
@@ -88,7 +107,7 @@ index = assign_tasks.assign_tasks(agents, tasks)
 print("calling simple solve")
 t = simple_solve.solve_tasks(agents, tasks, index, stop)  
 """
-
+"""
 agents =np.array([[1,1,1], [1,1,1], [1,1,1]])
 
 teamSum = 0
@@ -100,3 +119,4 @@ for a in agents:
         agentSum += (percent**2)
     teamSum += (1 - agentSum)
 IFD = teamSum/len(agents)
+"""
