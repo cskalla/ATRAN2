@@ -1,6 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
+Created on Sun Oct  3 14:11:05 2021
+
+@author: carolineskalla
+"""
+
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
 Created on Wed Sep 29 18:22:50 2021
 
 @author: carolineskalla
@@ -29,7 +37,7 @@ from matplotlib import cm
 
 #Parameters
 numfuncs = 9
-numagents = 9
+numagents = 10
 numtasks = 100
 agspread = 10
 anorm = 10
@@ -37,7 +45,7 @@ tnorm = 10
 numrepeats = 20
 stop = 500
 
-sim_threshold = 1
+#sim_threshold = 0.2
 
 adivvals = np.logspace(-1, 3, 20)
 gdivvals = np.logspace(-1, 3, 10)
@@ -49,8 +57,6 @@ maxsn = np.zeros((20, 10))
 meansn = np.zeros((20, 10))
 #finding the mean num tasks solved
 meannt = np.zeros((20, 10))
-
-
 
 #begin simulation
 ai = 0
@@ -69,7 +75,7 @@ for adiv in adivvals:
             #Assign tasks to agents
             index = assign_tasks.init_assign_tasks_nocomm(agents, tasks)
             #work on tasks
-            sn[ridx], nt[ridx] = simple_solve.solve_tasks_sim_comm(agents, tasks, index, stop, sim_threshold)    
+            sn[ridx], nt[ridx] = simple_solve.solve_tasks_DFD_sim_comm(agents, tasks, index, stop)    
         #save results for trial
         minsn[ai, gi] = min(sn)
         maxsn[ai, gi] = max(sn)
@@ -105,7 +111,7 @@ axes.plot_surface(IFD, DFD, meansn)
 plt.xlabel('IFD',fontsize=10)
 plt.ylabel('DFD',fontsize=10)
 axes.set_zlabel('Time', fontsize=10)
-plt.title("Functional Diversity - Euclidian distance similarity based communication")
+plt.title("Functional Diversity - DFD similarity based communication")
 plt.figtext(.5, 0.0, "stop = " + str(stop) + ", num tasks = " + str(numtasks) +  ", num agents = " + str(numagents) + ", Emergency stop = " + str(stop) + ", num repeats = " + str(numrepeats), ha="center", fontsize=10)
 plt.show()
 
@@ -126,7 +132,7 @@ axes.plot_surface(DFD, IFD, meansn)
 plt.xlabel('DFD',fontsize=10)
 plt.ylabel('IFD',fontsize=10)
 axes.set_zlabel('Time', fontsize=10)
-plt.title("Functional Diversity - Euclidian distance similarity based communication")
+plt.title("Functional Diversity - DFD similarity based communication")
 plt.figtext(.5, 0.0, "stop = " + str(stop) + ", num tasks = " + str(numtasks) +  ", num agents = " + str(numagents) + ", Emergency stop = " + str(stop) + ", num repeats = " + str(numrepeats), ha="center", fontsize=10)
 plt.show()
 
@@ -151,7 +157,7 @@ axes.plot_surface(IFD, DFD, meannt)
 plt.xlabel('IFD',fontsize=10)
 plt.ylabel('DFD',fontsize=10)
 axes.set_zlabel('Number of tasks solved', fontsize=10)
-plt.title("Functional Diversity - Euclidian distance similarity based communication")
+plt.title("Functional Diversity - DFD similarity based communication")
 plt.figtext(.5, 0.0, "stop = " + str(stop) + ", num tasks = " + str(numtasks) +  ", num agents = " + str(numagents) + ", Emergency stop = " + str(stop) + ", num repeats = " + str(numrepeats), ha="center", fontsize=10)
 plt.show()
 
@@ -173,6 +179,6 @@ axes.plot_surface(DFD, IFD, meannt)
 plt.xlabel('DFD',fontsize=10)
 plt.ylabel('IFD',fontsize=10)
 axes.set_zlabel('Number of tasks solved', fontsize=10)
-plt.title("Functional Diversity - Euclidian distance similarity based communication")
+plt.title("Functional Diversity - DFD similarity based communication")
 plt.figtext(.5, 0.0, "stop = " + str(stop) + ", num tasks = " + str(numtasks) +  ", num agents = " + str(numagents) + ", Emergency stop = " + str(stop) + ", num repeats = " + str(numrepeats), ha="center", fontsize=10)
 plt.show()

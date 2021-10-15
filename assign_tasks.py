@@ -36,6 +36,7 @@ def init_assign_tasks_nocomm(agents, tasks):
         random.shuffle(l)
         print(l)
         indices = l + [-1 for i in range(len(tasks), len(agents))]
+        
     return indices
 
 def new_task_comm(agents, tasks, index):
@@ -81,6 +82,33 @@ def new_task_simcomm(i, agents, tasks, indices, threshold):
                 h+=1
             #check to see if all agents working on this task pass the similarity threshold
             if np.all(sims >= threshold):
+                return taskLoc
+            
+            
+    return -1
+
+
+def new_task_DFD_simcomm(i, agents, tasks, indices):
+    #agents are randomly assigned to tasks 
+    #shuffle task indices for random selection
+    randTasks = [i for i in range(0, len(tasks))]
+    random.shuffle(randTasks)
+   
+    for i in range(0, len(randTasks)):
+        taskLoc = randTasks[i]
+    #taskLoc = random.randint(0,len(tasks)-1)
+    #figure out if any other agents already are working on this task
+        a = np.where(indices == taskLoc)
+        if len(a[0]) <= 1:
+            return taskLoc  
+        else:
+            sims = np.zeros(len(a[0]))
+            h = 0
+            for ag in a[0]:
+                sims[h] = similarity.DFD_similar(agents[i], agents[ag])
+                h+=1
+            #check to see if all agents working on this task pass the similarity threshold
+            if np.all(sims == True):
                 return taskLoc
             
             

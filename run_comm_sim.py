@@ -26,7 +26,7 @@ numtasks = 100
 agspread = 10
 anorm = 10
 tnorm = 10
-numrepeats = 5
+numrepeats = 20
 stop = 500
 
 adivvals = np.logspace(-1, 3, 20)
@@ -37,6 +37,8 @@ IFD = np.zeros((20,10))
 minsn = np.zeros((20, 10))
 maxsn = np.zeros((20, 10))
 meansn = np.zeros((20, 10))
+#finding the mean num tasks solved
+meannt = np.zeros((20, 10))
 
 #begin simulation
 ai = 0
@@ -47,7 +49,7 @@ for adiv in adivvals:
         agents = generate_agents.gen_agents(numfuncs, numagents, [adiv, agspread], (np.exp(-(np.array(range(0, numfuncs))**2/gdiv)))/sum(np.exp(-(np.array(range(0, numfuncs))**2/gdiv))), anorm)
         #Calculate and store diversity values
         [DFD[ai, gi], IFD[ai, gi]] = calc_fd.calc_fd(agents)
-        
+        nt = np.zeros(numrepeats)
         sn = np.zeros(numrepeats)
         for ridx in range(numrepeats):
             #Generate tasks
@@ -55,11 +57,12 @@ for adiv in adivvals:
             #Assign tasks to agents
             index = assign_tasks.init_assign_tasks_comm(agents, tasks)
             #work on tasks
-            sn[ridx] = simple_solve.solve_tasks_comm(agents, tasks, index, stop)    
+            sn[ridx], nt[ridx] = simple_solve.solve_tasks_comm(agents, tasks, index, stop)    
         #save results for trial
         minsn[ai, gi] = min(sn)
         maxsn[ai, gi] = max(sn)
         meansn[ai, gi] = np.mean(sn)
+        meannt[ai, gi] = np.mean(nt)
         
         gi+=1
     ai+=1
@@ -90,5 +93,73 @@ plt.xlabel('IFD',fontsize=10)
 plt.ylabel('DFD',fontsize=10)
 axes.set_zlabel('Time', fontsize=10)
 plt.title("Functional Diversity - Full communication")
+plt.figtext(.5, 0.0, "stop = " + str(stop) + ", num tasks = " + str(numtasks) +  ", num agents = " + str(numagents) + ", Emergency stop = " + str(stop) + ", num repeats = " + str(numrepeats), ha="center", fontsize=10)
+plt.show()
+
+
+#surface plot
+# target grid to interpolate to
+xi = np.arange(0,1.01,0.0001)
+yi = np.arange(0,1.01,0.0001)
+xi,yi = np.meshgrid(xi,yi)
+
+# interpolate
+zi = griddata((DFD.flatten(),IFD.flatten()),meansn.flatten(),(xi,yi),method='linear')
+fig2 = plt.figure()
+axes = fig2.gca(projection ='3d')
+axes.plot_surface(DFD, IFD, meansn)
+
+#plt.plot(x,y,'k.')
+plt.xlabel('DFD',fontsize=10)
+plt.ylabel('IFD',fontsize=10)
+axes.set_zlabel('Time', fontsize=10)
+plt.title("Functional Diversity - Full communication")
+plt.figtext(.5, 0.0, "stop = " + str(stop) + ", num tasks = " + str(numtasks) +  ", num agents = " + str(numagents) + ", Emergency stop = " + str(stop) + ", num repeats = " + str(numrepeats), ha="center", fontsize=10)
+plt.show()
+
+
+
+#####
+#second plot
+######
+#surface plot
+# target grid to interpolate to
+xi = np.arange(0,1.01,0.0001)
+yi = np.arange(0,1.01,0.0001)
+xi,yi = np.meshgrid(xi,yi)
+
+# interpolate
+zi = griddata((IFD.flatten(),DFD.flatten()),meannt.flatten(),(xi,yi),method='linear')
+fig2 = plt.figure()
+axes = fig2.gca(projection ='3d')
+axes.plot_surface(IFD, DFD, meannt)
+
+#plt.plot(x,y,'k.')
+plt.xlabel('IFD',fontsize=10)
+plt.ylabel('DFD',fontsize=10)
+axes.set_zlabel('Number of tasks solved', fontsize=10)
+plt.title("Functional Diversity - full communication")
+plt.figtext(.5, 0.0, "stop = " + str(stop) + ", num tasks = " + str(numtasks) +  ", num agents = " + str(numagents) + ", Emergency stop = " + str(stop) + ", num repeats = " + str(numrepeats), ha="center", fontsize=10)
+plt.show()
+
+#####
+#second plot
+######
+#surface plot
+# target grid to interpolate to
+xi = np.arange(0,1.01,0.0001)
+yi = np.arange(0,1.01,0.0001)
+xi,yi = np.meshgrid(xi,yi)
+
+# interpolate
+zi = griddata((DFD.flatten(),IFD.flatten()),meannt.flatten(),(xi,yi),method='linear')
+fig2 = plt.figure()
+axes = fig2.gca(projection ='3d')
+axes.plot_surface(DFD, IFD, meannt)
+#plt.plot(x,y,'k.')
+plt.xlabel('DFD',fontsize=10)
+plt.ylabel('IFD',fontsize=10)
+axes.set_zlabel('Number of tasks solved', fontsize=10)
+plt.title("Functional Diversity - full communication")
 plt.figtext(.5, 0.0, "stop = " + str(stop) + ", num tasks = " + str(numtasks) +  ", num agents = " + str(numagents) + ", Emergency stop = " + str(stop) + ", num repeats = " + str(numrepeats), ha="center", fontsize=10)
 plt.show()

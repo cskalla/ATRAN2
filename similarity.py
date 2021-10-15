@@ -29,3 +29,49 @@ x = np.array([1,1,1])
 y = np.array([0.5,0,0])
 similar(x,y)
 """
+
+#tests whether two agents have the same DFD
+def DFD_similar(agent1, agent2):
+    #get agent1's dominant function
+    a1_df_ind = np.argmax(agent1)
+    #get agent2's dominat function
+    a2_df_ind = np.argmax(agent2)
+    #compare
+    
+    if (np.array_equal(a1_df_ind, a2_df_ind, equal_nan=False)):
+        return True
+    #return T or F
+    else:
+        return False
+    
+    
+def euc_dist(agents, a1, a2):
+    #get agents 
+    agent1 = agents[a1]
+    agent2 = agents[a2]
+    # finding sum of squares
+    sum_sq = np.sum(np.square(agent1 - agent2))
+ 
+    # Doing squareroot and
+    # printing Euclidean distance
+    #print(np.sqrt(sum_sq))
+    return np.sqrt(sum_sq)
+    
+def gen_dist_matrix(agents):
+    matrix = np.zeros((len(agents), (len(agents))))
+    
+    for i in range(len(agents)):
+        for j in range(i, len(agents)):
+            if(i == j):
+                matrix[i][j] = 0
+            else:
+                d = euc_dist(agents, i, j)
+                matrix[i][j] = d
+                matrix[j][i] = d
+    return(matrix)
+    
+
+    
+    
+    
+    
