@@ -24,11 +24,14 @@ def gen_agents(nfunc, nagent, aDiv, gDiv, anorm):
     """
     
     #Generate Agents
-    
+    print("\n")
     #choosing a dominant function for each agent
     x = np.matlib.repmat(range(0, nfunc), nagent, 1)
     #choosing a dominant function for each agent
-    domf = np.random.choice(nfunc, nagent, replace=True, p=gDiv)
+    print(gDiv)
+    print(sum(gDiv))
+    domf = np.random.choice(np.arange(nfunc), nagent, replace=True, p=gDiv)
+    print(domf)
     #initialize agents - adding jitter
     agents = np.exp((-(x)^2)/(aDiv[0]+aDiv[0]*aDiv[1]/100*random.randint(0,nagent)-aDiv[1]/200))
     #normalize to anorm value
@@ -40,10 +43,14 @@ def gen_agents(nfunc, nagent, aDiv, gDiv, anorm):
         agents[aidx, :] = agents[aidx, np.random.permutation(len(agents[aidx,:]))]
         #put the dom function in the correct position
         swp = agents[aidx,domf[aidx]]; #old value
+        print(swp)
         m = max(agents[aidx,:])
+        print(m)
         l = np.where(agents[aidx,:] == np.amax(agents[aidx,:])) 
+        print(l[0][0])
         agents[aidx,domf[aidx]] = m
-        agents[aidx, l] = swp
+        agents[aidx, l[0][0]] = swp
+        
         
     return agents
 

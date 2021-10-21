@@ -39,7 +39,8 @@ from matplotlib import cm
 import assign_tasks2
 import solve2
 import calc_threshold
-
+import solve3
+import assign3
 
 """
 #plot results
@@ -144,8 +145,8 @@ plt.show()
 """
 
 #Parameters
-adivvals = np.logspace(-1, 3, 20)
-gdivvals = np.logspace(-1, 3, 10)
+adivvals = np.logspace(-1, 3, 50)
+gdivvals = np.logspace(-1, 3, 30)
 numfuncs = 9
 numagents = 9
 numtasks = 100
@@ -162,12 +163,12 @@ def run_sim(adivvals, gdivvals, numfuncs, numagents, numtasks, agspread, anorm, 
     
     
 
-    DFD = np.zeros((20,10))
-    IFD = np.zeros((20,10))
-    minsn = np.zeros((20, 10))
-    maxsn = np.zeros((20, 10))
-    meansn = np.zeros((20, 10)) #time
-    meannt = np.zeros((20, 10)) #num tasks solved
+    DFD = np.zeros((50,30))
+    IFD = np.zeros((50,30))
+    minsn = np.zeros((50, 30))
+    maxsn = np.zeros((50, 30))
+    meansn = np.zeros((50, 30)) #time
+    meannt = np.zeros((50, 30)) #num tasks solved
     
     
     #begin simulation
@@ -191,9 +192,9 @@ def run_sim(adivvals, gdivvals, numfuncs, numagents, numtasks, agspread, anorm, 
                 #Generate tasks
                 tasks = generate_tasks.gen_tasks(numfuncs, numtasks, tnorm)
                 #ASSIGN TASKS
-                index = assign_tasks2.init_assign_tasks(agents, tasks, s_t, max_agents_to_task, abandon_timer)
+                index = assign3.init_assign_tasks(agents, tasks, s_t, max_agents_to_task, abandon_timer)
                 #WORK ON TASKS
-                sn[ridx], nt[ridx] = solve2.complete_tasks(agents, tasks, index, stop, s_t,max_agents_to_task, abandon_timer)    
+                sn[ridx], nt[ridx] = solve3.complete_tasks(agents, tasks, index, stop, s_t,max_agents_to_task, abandon_timer)    
                 #save results for trial
                 minsn[ai, gi] = min(sn)
                 maxsn[ai, gi] = max(sn)
@@ -224,7 +225,7 @@ def plotting(IFD, DFD, meansn, meannt):
     plt.xlabel('IFD',fontsize=10)
     plt.ylabel('DFD',fontsize=10)
     axes.set_zlabel('Time', fontsize=10)
-    plt.title("Similarity Threshold (0.25) Information Sharing")
+    plt.title("No Information Sharing")
     plt.figtext(.5, 0.0, "threshold = "  + ", num tasks = " + str(numtasks) +  ", num agents = " + str(numagents) + ", Emergency stop = " + str(stop) + ", num repeats = " + str(numrepeats), ha="center", fontsize=10)
     plt.show()
 
@@ -237,31 +238,31 @@ def plotting(IFD, DFD, meansn, meannt):
     plt.xlabel('DFD',fontsize=10)
     plt.ylabel('IFD',fontsize=10)
     axes.set_zlabel('Time', fontsize=10)
-    plt.title("Similarity Threshold (0.25) Information Sharing")
+    plt.title("No Information Sharing")
     plt.figtext(.5, 0.0, "threshold = " + str(sim_threshold) + ", num tasks = " + str(numtasks) +  ", num agents = " + str(numagents) + ", Emergency stop = " + str(stop) + ", num repeats = " + str(numrepeats), ha="center", fontsize=10)
     plt.show()
     
     #Num tasks veiw 1
     fig2 = plt.figure()
     axes = fig2.gca(projection ='3d')
-    axes.plot_surface(DFD, IFD, meannt)
+    axes.plot_surface(IFD, DFD, meannt)
     
     plt.xlabel('IFD',fontsize=10)
     plt.ylabel('DFD',fontsize=10)
     axes.set_zlabel('Number of tasks completed', fontsize=10)
-    plt.title("Similarity Threshold (0.25) Information Sharing")
+    plt.title("No Information Sharing")
     plt.figtext(.5, 0.0, "threshold = " + str(sim_threshold) + ", num tasks = " + str(numtasks) +  ", num agents = " + str(numagents) + ", Emergency stop = " + str(stop) + ", num repeats = " + str(numrepeats), ha="center", fontsize=10)
     plt.show()
     
     #Num tasks veiw 2
     fig2 = plt.figure()
     axes = fig2.gca(projection ='3d')
-    axes.plot_surface(IFD, DFD, meannt)
+    axes.plot_surface(DFD, IFD, meannt)
     
     plt.xlabel('DFD',fontsize=10)
     plt.ylabel('IFD',fontsize=10)
     axes.set_zlabel('Number of tasks completed', fontsize=10)
-    plt.title("Similarity Threshold (0.25) Information Sharing")
+    plt.title("No Information Sharing")
     plt.figtext(.5, 0.0, "threshold = " + str(sim_threshold) + ", num tasks = " + str(numtasks) +  ", num agents = " + str(numagents) + ", Emergency stop = " + str(stop) + ", num repeats = " + str(numrepeats), ha="center", fontsize=10)
     plt.show()
     

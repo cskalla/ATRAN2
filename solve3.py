@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Mon Oct 11 08:43:15 2021
+Created on Wed Oct 20 17:04:25 2021
 
 @author: carolineskalla
 """
+
 import numpy as np
 import copy
 import assign_tasks2
+import assign3
+
 
 def complete_tasks(agents, tasks, indices, stop, threshold, max_agents_to_task, abandon_timer):
   
@@ -32,7 +35,7 @@ def complete_tasks(agents, tasks, indices, stop, threshold, max_agents_to_task, 
                     indices[i] = -1 #set back to -1 (indicating no task)
                     abandon_timer[i] = 0
                     #look for new task
-                    indices[i] = assign_tasks2.new_task(i, agents, tasks, indices, threshold, max_agents_to_task, abandon_timer)
+                    indices[i] = assign3.new_rand_task(i, agents, tasks, indices, threshold, max_agents_to_task, abandon_timer)
                 else:
                     #agents work
                     oldTask = tasks[indices[i]]
@@ -44,10 +47,11 @@ def complete_tasks(agents, tasks, indices, stop, threshold, max_agents_to_task, 
                 #print("task progress:", tasks)
             #if agent doesn't have task
             else:
-                indices[i] = assign_tasks2.new_task(i, agents, tasks, indices, threshold, max_agents_to_task, abandon_timer)
+                indices[i] = assign3.new_rand_task(i, agents, tasks, indices, threshold, max_agents_to_task, abandon_timer)
             i+=1
         time += 1
     #sum up the number of tasks solved
     num_tasks_solved = np.sum(tasks_solved)
+    print(tasks)
     return time, num_tasks_solved
     

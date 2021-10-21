@@ -1,14 +1,28 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Sat Oct  9 16:10:30 2021
+Created on Wed Oct 20 16:37:33 2021
 
 @author: carolineskalla
 """
+
 import numpy as np
 import random
 import similarity
 from more_itertools import sort_together
+
+#retun a random unclaimed task or -1
+def new_rand_task(i, agents, tasks, indices, threshold, max_agents_to_task, abandon_timer):
+    #identify unclaimed tasks
+    unclaimed_t_ind = check_unclaimed(agents, tasks, indices)
+    if len(unclaimed_t_ind) > 0:
+        #pick a random unclaimed task
+        ind = random.randint(0,len(unclaimed_t_ind)-1)
+        return unclaimed_t_ind[ind]
+        
+    else:
+        return -1
+    
 
 def init_assign_tasks(agents, tasks, threshold, max_agents_to_task, abandon_timer):
     #agents are randomly assigned to tasks
@@ -31,74 +45,16 @@ def init_assign_tasks(agents, tasks, threshold, max_agents_to_task, abandon_time
       
    for j in range(len(agents)):
             #print("hi2")
-            indices[j] = new_task(j, agents, tasks, indices, threshold, max_agents_to_task, abandon_timer)
+        indices[j] = new_rand_task(j, agents, tasks, indices, threshold, max_agents_to_task, abandon_timer)
             
         #indices[len(tasks)] = new_task(len(tasks), agents, tasks, indices, threshold)
         #indices[len(tasks) + 1] = new_task(len(tasks + 1), agents, tasks, indices, threshold)
-        
+   random.shuffle(indices)
    return indices
 
 
-#picks the most qualfied agent
-def new_task_1(i, agents, tasks, indices, threshold, max_agents_to_task, abandon_timer):
-    
-    #identify stuck agents
-    sa = stuck_agents(agents, tasks, indices, abandon_timer)
-    if len(sa) > 0:
-        #find the similarity between the tasks at the stuck agents and the current agent
-        sa_ind = [indices[t] for t in sa]
-        t_sim = []
-        for t in sa_ind:
-            t_sim.append(agent_task_sim(agents, tasks, i, t))
-        #sort the unclaimed tasks by similarity
-        srt = sorted(list(zip(t_sim, sa_ind)), reverse=False)
-        unzip_srt_list = [[ i for i, j in srt ],[ j for i, j in srt ]]
-        sorted_tasks = unzip_srt_list[1]
-        #go through ranked task and check compatibility with other agents
-        for t2 in sorted_tasks:
-            if is_compatible(agents, indices, i, t2, threshold):
-                num_a = agents_on_task(indices, t2)
-                if len(num_a) < max_agents_to_task:
-                    return t2  
-    return -1
-def new_task_2(i, agents, tasks, indices, threshold, max_agents_to_task, abandon_timer):
-    #identify unclaimed tasks
-    unclaimed_t_ind = check_unclaimed(agents, tasks, indices)
-    if len(unclaimed_t_ind) > 0:
-        #calculate similarity between task and agent
-        t_sim = []
-        for t3 in unclaimed_t_ind:
-            t_sim.append(agent_task_sim(agents, tasks, i, t3))
-        
-        #sort the unclaimed tasks by similarity
-        #srt = sorted(list(zip(t_sim, unclaimed_t_ind)), reverse=False)
-        #unzip_srt_list = [[ i for i, j in srt ],[ j for i, j in srt ]]
-        #sorted_unclaimed_tasks = unzip_srt_list[1]
-    
-        #find the min of t_sim (the task with the smallest distance)
-        min_ind = unclaimed_t_ind[t_sim.index(min(t_sim))]
-        #return 88
-        return min_ind
-    return -1
-def new_task_3(i, agents, tasks, indices, threshold, max_agents_to_task, abandon_timer):
-    task_ind = [i for i in range(0, len(tasks))]
-    t_sim = []
-    for t in task_ind:
-        t_sim.append(agent_task_sim(agents, tasks, i, t))
-    #sort the unclaimed tasks by similarity
-    srt = sorted(list(zip(t_sim, task_ind)), reverse=False)
-    unzip_srt_list = [[ i for i, j in srt ],[ j for i, j in srt ]]
-    sorted_tasks = unzip_srt_list[1]
-    #go through ranked task and check compatibility with other agents
-    for t2 in sorted_tasks:
-        if is_compatible(agents, indices, i, t2, threshold):
-            num_a = agents_on_task(indices, t2)
-            if len(num_a) < max_agents_to_task:
-                #return 88
-                return t2
-    #agent will remain with no task
-    return -1
 
+#helper functions
 
 #finds the tasks that are not currently assigned to agents
 def check_unclaimed(agents, tasks, indices):
@@ -158,10 +114,3 @@ def agents_on_task(indices, t_ind):
         if indices[i] == ( t_ind) :
             agt_list.append(i)
     return agt_list
-
-    
-    
-         
-            
-            
-    

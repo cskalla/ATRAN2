@@ -28,16 +28,16 @@ anorm = 10;
 #tnorm = 10;
 #numrepeats = 10;
 #EmergencyStop = 5e2;
-adivvals = np.logspace(-1, 3, 20)
-gdivvals = np.logspace(-1, 3, 10)
+adivvals = np.logspace(-1, 3, 50)
+gdivvals = np.logspace(-1, 3, 50)
 
 #adivvals = np.larray(range(0.1, 1000, ))
 #gdivvals = np.logspace(-1, 3, 10)
 
 
 #Generate agents
-DFD = np.zeros((20,10))
-IFD = np.zeros((20,10))
+DFD = np.zeros((50,50))
+IFD = np.zeros((50,50))
 
 ai = 0
 for adiv in adivvals:
