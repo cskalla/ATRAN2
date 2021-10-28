@@ -188,13 +188,13 @@ def run_sim(adivvals, gdivvals, numfuncs, numagents, numtasks, agspread, anorm, 
             sn = np.zeros(numrepeats)
             for ridx in range(numrepeats):
                 #create abandon timer
-                abandon_timer = np.zeros(len(agents))
+                #abandon_timer = np.zeros(len(agents))
                 #Generate tasks
                 tasks = generate_tasks.gen_tasks(numfuncs, numtasks, tnorm)
                 #ASSIGN TASKS
-                index = assign3.init_assign_tasks(agents, tasks, s_t, max_agents_to_task, abandon_timer)
+                #index = assign3.init_assign_tasks(agents, tasks, s_t, max_agents_to_task, abandon_timer)
                 #WORK ON TASKS
-                sn[ridx], nt[ridx] = solve3.complete_tasks(agents, tasks, index, stop, s_t,max_agents_to_task, abandon_timer)    
+                sn[ridx], nt[ridx] = solve3.complete_tasks(agents, tasks, stop, s_t,max_agents_to_task)    
                 #save results for trial
                 minsn[ai, gi] = min(sn)
                 maxsn[ai, gi] = max(sn)

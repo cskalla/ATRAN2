@@ -45,10 +45,10 @@ def DFD_similar(agent1, agent2):
         return False
     
     
-def euc_dist(agents, a1, a2):
+def euc_dist(list1, list2, a1, a2):
     #get agents 
-    agent1 = agents[a1]
-    agent2 = agents[a2]
+    agent1 = list1[a1]
+    agent2 = list2[a2]
     # finding sum of squares
     sum_sq = np.sum(np.square(agent1 - agent2))
  
@@ -65,7 +65,7 @@ def gen_dist_matrix(agents):
             if(i == j):
                 matrix[i][j] = 0
             else:
-                d = euc_dist(agents, i, j)
+                d = euc_dist(agents, agents, i, j)
                 matrix[i][j] = d
                 matrix[j][i] = d
     return(matrix)
