@@ -21,7 +21,7 @@ numfuncs = 9;
 #Number of agents
 numagents = 10;
 #Number of tasks
-numtasks = 1;
+numtasks = 100;
 #Diversity jitter
 agspread = 10;
 #Agent total skill strength

@@ -16,15 +16,23 @@ import copy
 
 def solve(agents, tasks):
     
-    print("task:", tasks)
+    #print("task:", tasks)
     
-    #pick a random task for the agent
-    a_ind = random.randint(0,len(agents)-1)
+    #allocate agents to tasks
+    #a_ind = np.random.choice(np.arange(0,len(tasks)-1), size=(len(tasks)))
+    ###########
+    #fill indices array with -1s
+    index = np.arange(len(agents))
+    index.fill(-1)
+    a_ind = np.random.choice(np.arange(len(tasks)), size =len(index))
+    #random.shuffle(index)
+    #give a task to 
+    ###########
     
-    print("First agent assigned:", a_ind)
+    #print("First agent assigned:", a_ind)
     
     #find the euclidean distance between the task and the agent
-    agent_task_dist = similarity.euc_dist(agents, tasks, a_ind, 0)
+    #agent_task_dist = similarity.euc_dist(agents, tasks, a_ind, 0)
     #generate distance matrix
     dist_matrix = similarity.gen_dist_matrix(agents)
     #calculate a similarity threshold
@@ -40,45 +48,68 @@ def solve(agents, tasks):
     #complete tasks
     while np.any([np.any(task > 0) for task in tasks]) and time != stop:
         
-        print("time step:", time)
-        
-        #scan agents to pass
-        candidate = passing.scan_close_agents(agents, a_ind, dist_matrix, close_agents_size)
-        #if the candidate is closer to the task then pass it
-        if similarity.euc_dist(agents, tasks, a_ind, 0) > similarity.euc_dist(agents, tasks, candidate, 0):
-            print("passed from", a_ind, "to", candidate)
-            a_ind = candidate
-            num_passes += 1
-            time += 1
-            continue
-        progress = copy.deepcopy(tasks)
-        #locs = np.where(tasks == progress)
-        
-        #agents work
-        tasks = tasks - agents[a_ind]
-        #set negative values to 0 
-        tasks[tasks < 0] = 0
-        
-        #if task is complete, cut loop
-        if np.all(tasks == 0):
-            time += 1
-            continue
-    
-        #check if the agent is stuck and force pass
-        change = progress - tasks
-        print("task status:", tasks)
-        #print("change:", change)
-        if np.all(change < 1):
+        #print("time step:", time)
+        #repeat for each task
+        for i in range(len(a_ind)):
+            """
             #scan agents to pass
-            print("agent", a_ind, " is stuck")
-            a_ind = passing.scan_close_agents(agents, a_ind, dist_matrix, close_agents_size)
-            print("task was passed to", a_ind)
-            num_passes += 1
+            candidate = passing.scan_close_agents(agents, i, dist_matrix, close_agents_size)
+            #if the candidate is closer to the task then pass it
+            if similarity.euc_dist(agents, tasks, i, a_ind[i]) > similarity.euc_dist(agents, tasks, candidate, a_ind[i]):
+                print("passed from", i, "to", candidate)
+                curr_task = a_ind[i]
+                a_ind[i] = a_ind[candidate]
+                
+                #swap tasks
+                #cand_task = np.where(a_ind == candidate)
+                #cand_task = a_ind[candidate]
+                a_ind[candidate] = curr_task
+                num_passes += 1
+               
+                continue
+            """
+            progress = copy.deepcopy(tasks[i])
+            #locs = np.where(tasks == progress)
             
+            #agents work
+            tasks[a_ind[i]] = tasks[a_ind[i]] - agents[i]
+            #set negative values to 0 
+            tasks[a_ind[i]][tasks[a_ind[i]] < 0] = 0
+            
+            #if task is complete, cut loop
+            if np.all(tasks[a_ind[i]] == 0):
+                #unassign completed task
+                a_ind[i] = -1
+                #assign new task to agent
+                a_ind[i] = passing.get_new_task(i, a_ind, tasks)
+                
+                continue
+        
+            #check if the agent is stuck and force pass
+            change = progress - tasks[a_ind[i]]
+            #print("task status:", tasks[a_ind[i]])
+            #print("change:", change)
+            if np.all(change < 1):
+                #scan agents to pass
+                #print("agent", i, " is stuck")
+                candidate = passing.scan_close_agents(agents, i, dist_matrix, close_agents_size)
+                #swap tasks
+                cand_task = a_ind[candidate]
+                a_ind[candidate] = a_ind[i]
+                a_ind[i] = cand_task
+                #print("task was passed to", a_ind[i])
+                num_passes += 1
+                
         time += 1
-    print("Sim end!")
-    print("time:",time)
-    print("num passes:", num_passes)
+    #print("Sim end!")
+    #print("time:",time)
+    #print("num passes:", num_passes)
+    num_task_completed = 0
+    for task in tasks:
+        if (np.all(task <= 0)):
+            num_task_completed += 1
+    #print("num tasks completed",num_task_completed)
+    return time, num_task_completed, num_passes
     
     
     
