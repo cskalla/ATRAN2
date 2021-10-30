@@ -30,14 +30,15 @@ def solve(agents, tasks):
     ###########
     
     #print("First agent assigned:", a_ind)
-    
+    close_agents_size = 3
     #find the euclidean distance between the task and the agent
     #agent_task_dist = similarity.euc_dist(agents, tasks, a_ind, 0)
     #generate distance matrix
     dist_matrix = similarity.gen_dist_matrix(agents)
+    close_agent_matrix = similarity.close_agents(agents, close_agents_size)
     #calculate a similarity threshold
     #threshold = calc_threshold.calc_threshold(agents, 0.65)
-    close_agents_size = 3
+   
     #replace zeros with inf so that agents won't pass to themselves
     dist_matrix[dist_matrix == 0] = float('inf')
     stop = 500
@@ -92,7 +93,7 @@ def solve(agents, tasks):
             if np.all(change < 1):
                 #scan agents to pass
                 #print("agent", i, " is stuck")
-                candidate = passing.scan_close_agents(agents, i, dist_matrix, close_agents_size)
+                candidate = passing.pick_close_agent(i, close_agent_matrix, close_agents_size)
                 #swap tasks
                 cand_task = a_ind[candidate]
                 a_ind[candidate] = a_ind[i]

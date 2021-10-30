@@ -40,11 +40,11 @@ gdivvals = 10**(0.2*np.linspace(-3, 5, 10))
 
 numfuncs = 9
 numagents = 10
-numtasks = 100
+numtasks = 10
 agspread = 10
 anorm = 10
 tnorm = 10
-numrepeats = 20
+numrepeats = 5
 stop = 500
 #max_agents_to_task = numagents/10
 #sim_threshold = 0.25 #similarity threshold - could be changed later??

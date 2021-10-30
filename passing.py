@@ -10,17 +10,19 @@ import random
 import similarity
 import copy
 
-def scan_close_agents(agents, a_ind, dist_matrix, close_agents_size):
+def pick_close_agent(a_ind, close_agent_matrix, close_agents_size):
         #print("current agent: agent #", a_ind)
 
         #sort the distance matrix
-        close_agents = np.argsort(dist_matrix[a_ind])
+        #close_agents = np.argsort(dist_matrix[a_ind])
         
         #find three agent candidates
-        agent_circle = close_agents[0:3]
+        #agent_circle = close_agents[0:3]
         #print("agent circle is:", agent_circle)
         #pick a random agent from the small cirle to pass the task to
-        p = np.array([1/6, 2/6, 3/6])
+        
+        agent_circle = close_agent_matrix[a_ind]
+        p = pass_prob(close_agents_size)
         a_ind = np.random.choice(agent_circle, replace=True, p=p)
         #print("passes to: agent #", a_ind)
         #agent_task_dist = similarity.euc_dist(agents, tasks, a_ind, 0)
@@ -50,7 +52,10 @@ def get_new_task(i, a_ind, tasks):
     else:
         return unclaimed_uncomplete[random.randint(0, len(unclaimed_uncomplete) -1)]
         
-        
+def pass_prob(close_agents_size):   
+    x = np.exp(-(np.arange(close_agents_size)**2)/3)
+    y = x/np.sum(x)
+    return y[::-1]   
         
         
     

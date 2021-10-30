@@ -7,43 +7,6 @@ Created on Wed Sep 29 10:50:57 2021
 """
 
 import numpy as np
-
-
-def similar(agent1, agent2):
-   # print("agent1", agent1)
-    #print("agent2", agent2)
-    #use the shorter length (smaller number of skills)
-    length = min(len(agent1),len(agent2))
-    #print("length", length)
-    count = 0
-    for i in range(length):
-       # print(agent1[i])
-        #print(agent2[i])
-        if (agent1[i] > 0) and (agent2[i] > 0):
-            count += 1
-    return(count/length)
-    
-    
-"""        
-x = np.array([1,1,1])  
-y = np.array([0.5,0,0])
-similar(x,y)
-"""
-
-#tests whether two agents have the same DFD
-def DFD_similar(agent1, agent2):
-    #get agent1's dominant function
-    a1_df_ind = np.argmax(agent1)
-    #get agent2's dominat function
-    a2_df_ind = np.argmax(agent2)
-    #compare
-    
-    if (np.array_equal(a1_df_ind, a2_df_ind, equal_nan=False)):
-        return True
-    #return T or F
-    else:
-        return False
-    
     
 def euc_dist(list1, list2, a1, a2):
     #get agents 
@@ -69,6 +32,20 @@ def gen_dist_matrix(agents):
                 matrix[i][j] = d
                 matrix[j][i] = d
     return(matrix)
+
+#determines the close agents once at the beginning of the simulation
+def close_agents(agents, close_agent_size):
+    dist_matrix = gen_dist_matrix(agents)
+    close_agent_matrix = np.array((len(agents), close_agent_size))
+    #sort the distance matrix
+    for a_ind in range(len(agents)):
+        close_agents = np.argsort(dist_matrix[a_ind])
+        #find three agent candidates
+        agent_circle = close_agents[0:3]
+        close_agent_matrix[a_ind].append(agent_circle)
+    return close_agent_matrix
+        
+    
     
 
     

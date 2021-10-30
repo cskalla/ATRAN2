@@ -46,7 +46,7 @@ def calc_fd(agents):
     T = np.array(np.unique(I, return_counts=True)).T
     
     DFD = 1 - sum((T[:,1]/len(agents))**2) #This is the first formula in the Bunderson & Sutcliffe, 2002 paper
-    DFD = DFD/maxDFD #This is the normalization they mention on page 885 below the formula
+    dfd = DFD/maxDFD #This is the normalization they mention on page 885 below the formula
 
 
     """
@@ -62,6 +62,7 @@ def calc_fd(agents):
     #IFDS = 1 - agents/agents.sum(axis=1)
     #find the total skill for each agent
     #IFDS = 1 - np.array([sum(((a/sum(a))**2)) for a in agents])
+    """
     teamSum = 0
     for a in agents:
         agentSum = 0
@@ -72,5 +73,31 @@ def calc_fd(agents):
         teamSum += (1 - agentSum)
     IFD = teamSum/len(agents)
     return [DFD, IFD]
+    """
+    agent_sums = np.transpose(np.sum(agents, axis=1))
+    #print(agent_sums)
+    agent_percentages = agents/agent_sums[:, None]
+  
+    #print(agent_percentages)
+    #print(sum(agent_percentages))
+    x = 1 - (np.sum(agent_percentages**2, axis=1))
+    ifd = np.mean(x)
+    return dfd,ifd
 
-#x= calc_fd(np.array([[0.4,0.6,0,0], [0,0,0.6, 0.4]]))
+
+####### testing ###############
+import generate_agents
+numfuncs = 9
+adiv = 25
+gdiv = 10
+numagents = 10
+agspread = 10
+anorm = 10
+agents = generate_agents.gen_agents(numfuncs, numagents, [adiv, agspread], (np.exp(-(np.array(range(0, numfuncs))**2/gdiv)))/sum(np.exp(-(np.array(range(0, numfuncs))**2/gdiv))), anorm)
+dfd, ifd = calc_fd(agents)
+
+domf = np.exp(-(np.arange(numfuncs)**2)/gdiv)
+print(domf)
+print(np.sum(domf))
+#normalize so that sum = 1 (requirement of python choice function)
+print(domf/np.sum(domf))
