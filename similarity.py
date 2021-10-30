@@ -31,18 +31,19 @@ def gen_dist_matrix(agents):
                 d = euc_dist(agents, agents, i, j)
                 matrix[i][j] = d
                 matrix[j][i] = d
+    matrix[matrix == 0] = float('inf')
     return(matrix)
 
 #determines the close agents once at the beginning of the simulation
 def close_agents(agents, close_agent_size):
     dist_matrix = gen_dist_matrix(agents)
-    close_agent_matrix = np.array((len(agents), close_agent_size))
+    close_agent_matrix = np.zeros((len(agents),close_agent_size))
     #sort the distance matrix
     for a_ind in range(len(agents)):
         close_agents = np.argsort(dist_matrix[a_ind])
         #find three agent candidates
-        agent_circle = close_agents[0:3]
-        close_agent_matrix[a_ind].append(agent_circle)
+        agent_circle = close_agents[0:close_agent_size]
+        close_agent_matrix[a_ind] = agent_circle
     return close_agent_matrix
         
     

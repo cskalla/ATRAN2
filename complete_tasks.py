@@ -30,7 +30,7 @@ def solve(agents, tasks):
     ###########
     
     #print("First agent assigned:", a_ind)
-    close_agents_size = 3
+    close_agents_size = 5
     #find the euclidean distance between the task and the agent
     #agent_task_dist = similarity.euc_dist(agents, tasks, a_ind, 0)
     #generate distance matrix
@@ -40,7 +40,7 @@ def solve(agents, tasks):
     #threshold = calc_threshold.calc_threshold(agents, 0.65)
    
     #replace zeros with inf so that agents won't pass to themselves
-    dist_matrix[dist_matrix == 0] = float('inf')
+    #dist_matrix[dist_matrix == 0] = float('inf')
     stop = 500
     
     num_passes = 0
