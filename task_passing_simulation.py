@@ -27,6 +27,7 @@ agspread = 10;
 #Agent total skill strength
 anorm = 10;
 tnorm = 10;
+close_agents_size = 3
 #numrepeats = 10;
 #EmergencyStop = 5e2;
 adivvals = np.logspace(-1, 3, 20)
@@ -48,5 +49,5 @@ dfd, ifd = calc_fd.calc_fd(agents)
 #generate tasks
 tasks = generate_tasks.gen_tasks(numfuncs, numtasks, tnorm)
 
-complete_tasks.solve(agents, tasks)
+complete_tasks.solve(agents, tasks, close_agents_size)
 

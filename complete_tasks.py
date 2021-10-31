@@ -14,7 +14,7 @@ import calc_threshold
 import passing
 import copy
 
-def solve(agents, tasks):
+def solve(agents, tasks, close_agents_size):
     
     #print("task:", tasks)
     
@@ -30,7 +30,7 @@ def solve(agents, tasks):
     ###########
     
     #print("First agent assigned:", a_ind)
-    close_agents_size = 5
+    
     #find the euclidean distance between the task and the agent
     #agent_task_dist = similarity.euc_dist(agents, tasks, a_ind, 0)
     #generate distance matrix
@@ -52,23 +52,7 @@ def solve(agents, tasks):
         #print("time step:", time)
         #repeat for each task
         for i in range(len(a_ind)):
-            """
-            #scan agents to pass
-            candidate = passing.scan_close_agents(agents, i, dist_matrix, close_agents_size)
-            #if the candidate is closer to the task then pass it
-            if similarity.euc_dist(agents, tasks, i, a_ind[i]) > similarity.euc_dist(agents, tasks, candidate, a_ind[i]):
-                print("passed from", i, "to", candidate)
-                curr_task = a_ind[i]
-                a_ind[i] = a_ind[candidate]
-                
-                #swap tasks
-                #cand_task = np.where(a_ind == candidate)
-                #cand_task = a_ind[candidate]
-                a_ind[candidate] = curr_task
-                num_passes += 1
-               
-                continue
-            """
+           
             progress = copy.deepcopy(tasks[i])
             #locs = np.where(tasks == progress)
             
