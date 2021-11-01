@@ -44,15 +44,15 @@ def get_new_task(i, a_ind, tasks):
     unclaimed = np.array(unclaimed)
     """
     task_options = np.arange(len(tasks))
-    unclaimed = task_options[np.isin(task_options, a_ind)]
+    unclaimed = task_options[np.invert(np.isin(task_options, a_ind))]
     #task_candidates[np.all(a_ind != task_candidates)]
     #a_ind2 = copy.deepcopy(a_ind) + np.zeros((range(len(a_ind), len(tasks))))
     #np.argsort(a_ind2)
     
    # unclaimed =  task candidates
-    unclaimed_uncomplete = unclaimed[np.any(tasks[unclaimed] > 0)]
-    unclaimed_uncomplete = [ta for ta in unclaimed if np.any(ta > 0)]
-    unclaimed_uncomplete = np.array(unclaimed_uncomplete)
+    unclaimed_uncomplete = unclaimed[unclaimed == np.any(tasks[unclaimed] > 0)]
+    #unclaimed_uncomplete = [ta for ta in unclaimed if np.any(ta > 0)]
+    #unclaimed_uncomplete = np.array(unclaimed_uncomplete)
     #print("unclaimed:", unclaimed_uncomplete)
     if len(unclaimed_uncomplete) == 0:
         return -1
