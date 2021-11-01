@@ -48,7 +48,7 @@ anorm = 10
 tnorm = 10
 numrepeats = 5
 stop = 500
-close_agents_size = 3
+close_agents_size = 2
 #max_agents_to_task = numagents/10
 #sim_threshold = 0.25 #similarity threshold - could be changed later??
 #sim_threshold = 0 #full communication
@@ -114,8 +114,9 @@ def plotting(IFD, DFD, meansn, meannt, sn_error, nt_error, numtasks, numagents, 
     
     #dfd is x axes and y is time taken
     #plt.plot(DFD, meansn, linestyle='--', marker='o', color='b', label='line with marker')
-    plt.scatter(DFD, meansn, marker='o', color='b', label='line with marker')
-    plt.errorbar(DFD, meansn, yerr=sn_error)
+    plt.scatter(DFD, meansn)
+    plt.errorbar(DFD, meansn, yerr=sn_error, color='red', marker='o', capsize=5, capthick=1, ecolor='black')
+    #plt.errorbar(DFD, meansn, yerr=sn_error)
     #Time veiw 1
     plt.xlabel('DFD',fontsize=10)
     plt.ylabel('Time taken to complete all tasks',fontsize=10)
@@ -128,8 +129,9 @@ def plotting(IFD, DFD, meansn, meannt, sn_error, nt_error, numtasks, numagents, 
     
     #dfd is x axes and y is time taken
     #plt.plot(DFD, meansn, linestyle='--', marker='o', color='b', label='line with marker')
-    plt.scatter(DFD, meannt, marker='o', color='r', label='line with marker')
-    plt.errorbar(DFD, meannt, yerr=nt_error)
+    plt.scatter(DFD, meannt)
+    plt.errorbar(DFD, meannt, yerr=nt_error, color='red', marker='o', capsize=5, capthick=1, ecolor='black')
+    #plt.errorbar(DFD, meannt, yerr=nt_error)
     #Time veiw 1
     plt.xlabel('DFD',fontsize=10)
     plt.ylabel('Number of tasks completed',fontsize=10)
@@ -137,6 +139,13 @@ def plotting(IFD, DFD, meansn, meannt, sn_error, nt_error, numtasks, numagents, 
     plt.title("Agents pass to small circle")
     plt.figtext(.5, 0.0, "IFD = " + str(IFD) + ", num tasks = " + str(numtasks) +  ", num agents = " + str(numagents) + ", small circle size = " + str(close_agents_size) + ", Max time = " + str(stop) + ", num repeats = " + str(numrepeats), ha="center", fontsize=10)
     plt.show()
+    
+    
+    
+    
+    
+    
+   
 
 
   

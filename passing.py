@@ -36,11 +36,15 @@ def pick_close_agent(a_ind, close_agent_matrix, close_agents_size):
     
 def get_new_task(i, a_ind, tasks):
     #identify which tasks are not taken
+    """
     unclaimed = []
     for t in range(len(tasks)):
         if t not in a_ind:
             unclaimed.append(t)
     unclaimed = np.array(unclaimed)
+    """
+    task_options = np.arange(len(tasks))
+    unclaimed = task_options[np.isin(task_options, a_ind)]
     #task_candidates[np.all(a_ind != task_candidates)]
     #a_ind2 = copy.deepcopy(a_ind) + np.zeros((range(len(a_ind), len(tasks))))
     #np.argsort(a_ind2)
