@@ -7,6 +7,8 @@ Created on Wed Sep 29 10:50:57 2021
 """
 
 import numpy as np
+import passing
+import random
     
 def euc_dist(list1, list2, a1, a2):
     #get agents 
@@ -19,6 +21,12 @@ def euc_dist(list1, list2, a1, a2):
     # printing Euclidean distance
     #print(np.sqrt(sum_sq))
     return np.sqrt(sum_sq)
+
+def gen_euc_dist_matrix(agents):
+   
+    a, b= np.meshgrid(agents,agents)
+    c = np.sum((a - b)**2)
+    
     
 def gen_dist_matrix(agents):
     matrix = np.zeros((len(agents), (len(agents))))
@@ -34,6 +42,9 @@ def gen_dist_matrix(agents):
     matrix[matrix == 0] = float('inf')
     return(matrix)
 
+    #array version
+    #d1 = np.arange(len(agents))
+
 #determines the close agents once at the beginning of the simulation
 def close_agents(agents, close_agent_size):
     dist_matrix = gen_dist_matrix(agents)
@@ -42,7 +53,14 @@ def close_agents(agents, close_agent_size):
     for a_ind in range(len(agents)):
         close_agents = np.argsort(dist_matrix[a_ind])
         #find three agent candidates
-        agent_circle = close_agents[0:close_agent_size]
+        
+        #add some probabilty to close agents
+        choices = np.arange(len(agents))
+        p=passing.pass_prob(len(choices))
+        close_ind = np.random.choice(choices, replace=False, p=p)
+        agent_circle = close_agents[close_ind]
+        
+        #agent_circle = close_agents[0:close_agent_size]
         close_agent_matrix[a_ind] = agent_circle
     return close_agent_matrix
         

@@ -89,10 +89,16 @@ def solve(agents, tasks, close_agents_size):
     #print("Sim end!")
     #print("time:",time)
     #print("num passes:", num_passes)
+    """
     num_task_completed = 0
+    
     for task in tasks:
         if (np.all(task <= 0)):
             num_task_completed += 1
+            
+     """       
+    num_task_completed = len(tasks[np.all(tasks <= 0, axis =1)])
+    
     #print("num tasks completed",num_task_completed)
     return time, num_task_completed, num_passes
     

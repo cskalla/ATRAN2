@@ -38,8 +38,8 @@ print(gdivvals)
 stop = 500
 
 #choose aDiv and gDiv from above options
-adiv = 100 #high IFD
-gdiv = 1
+adiv = 15 #high IFD
+gdiv = 20
 #46
 
 #gen agents

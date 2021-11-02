@@ -50,9 +50,9 @@ def get_new_task(i, a_ind, tasks):
     #np.argsort(a_ind2)
     
    # unclaimed =  task candidates
-    unclaimed_uncomplete = unclaimed[unclaimed == np.any(tasks[unclaimed] > 0)]
-    #unclaimed_uncomplete = [ta for ta in unclaimed if np.any(ta > 0)]
-    #unclaimed_uncomplete = np.array(unclaimed_uncomplete)
+    #unclaimed_uncomplete = unclaimed[np.any(tasks[unclaimed] > 0)]
+    unclaimed_uncomplete = [ta for ta in unclaimed if np.any(ta > 0)]
+    unclaimed_uncomplete = np.array(unclaimed_uncomplete)
     #print("unclaimed:", unclaimed_uncomplete)
     if len(unclaimed_uncomplete) == 0:
         return -1

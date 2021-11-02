@@ -46,9 +46,9 @@ numtasks = 100
 agspread = 10
 anorm = 10
 tnorm = 10
-numrepeats = 5
+numrepeats = 2
 stop = 500
-close_agents_size = 2
+close_agents_size = 3
 #max_agents_to_task = numagents/10
 #sim_threshold = 0.25 #similarity threshold - could be changed later??
 #sim_threshold = 0 #full communication
@@ -115,7 +115,7 @@ def plotting(IFD, DFD, meansn, meannt, sn_error, nt_error, numtasks, numagents, 
     #dfd is x axes and y is time taken
     #plt.plot(DFD, meansn, linestyle='--', marker='o', color='b', label='line with marker')
     plt.scatter(DFD, meansn)
-    plt.errorbar(DFD, meansn, yerr=sn_error, color='red', marker='o', capsize=5, capthick=1, ecolor='black')
+    plt.errorbar(DFD, meansn, yerr=sn_error, color='red',fmt = 'o', capsize=5, capthick=1, ecolor='black')
     #plt.errorbar(DFD, meansn, yerr=sn_error)
     #Time veiw 1
     plt.xlabel('DFD',fontsize=10)
@@ -130,7 +130,7 @@ def plotting(IFD, DFD, meansn, meannt, sn_error, nt_error, numtasks, numagents, 
     #dfd is x axes and y is time taken
     #plt.plot(DFD, meansn, linestyle='--', marker='o', color='b', label='line with marker')
     plt.scatter(DFD, meannt)
-    plt.errorbar(DFD, meannt, yerr=nt_error, color='red', marker='o', capsize=5, capthick=1, ecolor='black')
+    plt.errorbar(DFD, meannt, yerr=nt_error, color='red', fmt='o', capsize=5, capthick=1, ecolor='black')
     #plt.errorbar(DFD, meannt, yerr=nt_error)
     #Time veiw 1
     plt.xlabel('DFD',fontsize=10)
