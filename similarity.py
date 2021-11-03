@@ -81,7 +81,19 @@ def display_small_circles(agents, relative_threshold):
         print("Close friends:", len(close_friends))
         len_circle[i] = len(close_friends)
     return np.mean(len_circle)
-        
+    
+   
+#generate close agent matrix using a threshold (no fixed size, based on similarity)
+def close_agents_from_threshold(i,agents, relative_threshold):  
+    #threshold = calc_threshold.calc_threshold(agents, relative_threshold)
+    threshold = relative_threshold
+    dist_matrix = gen_dist_matrix(agents)
+    close_agents = np.argsort(dist_matrix[i])
+    #close_agent_matrix.fill(float('inf'))
+    indices = np.arange((len(close_agents)))
+    close_agents = indices[close_agents[indices] < threshold]
+    return close_agents
+    
     
     
 
