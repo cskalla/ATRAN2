@@ -9,6 +9,7 @@ import numpy as np
 import random
 import similarity
 import copy
+import calc_threshold
 
 def pick_close_agent(a_ind, close_agent_matrix, close_agents_size):
         #print("current agent: agent #", a_ind)
@@ -50,16 +51,21 @@ def get_new_task(i, a_ind, tasks):
     #np.argsort(a_ind2)
     
    # unclaimed =  task candidates
-    #unclaimed_uncomplete = unclaimed[np.any(tasks[unclaimed] > 0)]
-    unclaimed_uncomplete = [ta for ta in unclaimed if np.any(ta > 0)]
-    unclaimed_uncomplete = np.array(unclaimed_uncomplete)
+    unclaimed_uncomplete = unclaimed[np.any(tasks[unclaimed] > 0, axis = 1)]
+    #unclaimed_uncomplete = [ta for ta in unclaimed if np.any(ta > 0)]
+    #unclaimed_uncomplete = np.array(unclaimed_uncomplete)
     #print("unclaimed:", unclaimed_uncomplete)
     if len(unclaimed_uncomplete) == 0:
+        #print("1")
         return -1
     else:
-        return unclaimed_uncomplete[random.randint(0, len(unclaimed_uncomplete) -1)]
+        task = unclaimed_uncomplete[random.randint(0, len(unclaimed_uncomplete) -1)]
+        print(task)
+        #return unclaimed_uncomplete[random.randint(0, len(unclaimed_uncomplete) -1)]
+        return task
         
-def pass_prob(close_agents_size):   
+def pass_prob(close_agents_size):  
+    
     x = np.exp(-(np.arange(close_agents_size)**2)/3)
     y = x/np.sum(x)
     return y[::-1]   

@@ -35,18 +35,19 @@ import complete_tasks
 #gdivvals = np.logspace(-1, 3, 10)
 
 #IFD will be held constant
-adiv = 20
-#adivvals = 10**(np.linspace(0.1, 0.2, 40)*(np.linspace(-6, 7, 40)))
-gdivvals = 10**(0.2*np.linspace(-3, 5, 20))
+#adiv = 15
+adivvals = 10**(np.linspace(0.1, 0.2, 20)*(np.linspace(-6, 7, 20)))
+#gdivvals = 10**(0.2*np.linspace(-3, 5, 20))
+gdiv = 10
 
 
 numfuncs = 9
 numagents = 10
-numtasks = 100
+numtasks = 10
 agspread = 10
 anorm = 10
 tnorm = 10
-numrepeats = 2
+numrepeats = 100
 stop = 500
 close_agents_size = 3
 #max_agents_to_task = numagents/10
@@ -57,8 +58,10 @@ def run_sim(adiv, gdivvals, numfuncs, numagents, numtasks, agspread, anorm, tnor
     
     
 
-    DFD = np.zeros((20))
-    IFD = 0
+    # DFD = np.zeros((20))
+    IFD = np.zeros((20))
+    DFD = 0
+    #IFD = 0
     minsn = np.zeros((20))
     maxsn = np.zeros((20))
     meansn = np.zeros((20)) #time
@@ -69,13 +72,16 @@ def run_sim(adiv, gdivvals, numfuncs, numagents, numtasks, agspread, anorm, tnor
     
     
     #begin simulation
-    gi = 0   
-    for gdiv in gdivvals:
+    #gi = 0   
+    ai = 0
+    #for gdiv in gdivvals:
+    for adiv in adivvals:
         #generate agents
         agents = generate_agents.gen_agents(numfuncs, numagents, [adiv, agspread], (np.exp(-(np.array(range(0, numfuncs))**2/gdiv)))/sum(np.exp(-(np.array(range(0, numfuncs))**2/gdiv))), anorm)
         
         #Calculate and store diversity values
-        [DFD[gi], IFD] = calc_fd.calc_fd(agents)
+        #[DFD[gi], IFD] = calc_fd.calc_fd(agents)
+        [DFD, IFD[ai]] = calc_fd.calc_fd(agents)
         nt = np.zeros(numrepeats)
         sn = np.zeros(numrepeats)
         npass = np.zeros(numrepeats)
@@ -88,34 +94,45 @@ def run_sim(adiv, gdivvals, numfuncs, numagents, numtasks, agspread, anorm, tnor
             #index = assign3.init_assign_tasks(agents, tasks, s_t, max_agents_to_task, abandon_timer)
             sn[ridx], nt[ridx], npass[ridx] = complete_tasks.solve(agents, tasks, close_agents_size)    
             #save results for trial
-        minsn[gi] = np.min(sn)
-        maxsn[gi] = np.max(sn)
-        meansn[gi] = np.mean(sn) #mean time
+        #minsn[gi] = np.min(sn)
+        #maxsn[gi] = np.max(sn)
+       # meansn[ai] = np.mean(sn) #mean time
+        minsn[ai] = np.min(sn)
+        maxsn[ai] = np.max(sn)
+        meansn[ai] = np.mean(sn) #mean time
+        
         #find error for time
         #time_diff = sn - meansn[gi]
         #time_sqq = time_diff**2
-        sn_error[gi] = np.std(sn)
-        
-        meannt[gi] = np.mean(nt) #mean num tasks
+        #sn_error[gi] = np.std(sn)
+        sn_error[ai] = np.std(sn)
+        #meannt[gi] = np.mean(nt) #mean num tasks
+        meannt[ai] = np.mean(nt) #mean num tasks
         #find error for num tasks
         #tasks_diff = nt - meannt[gi]
         #tasks_sqq = tasks_diff**2
-        nt_error[gi] = np.std(nt)
+        #nt_error[gi] = np.std(nt)
+        nt_error[ai] = np.std(nt)
         
-        meannp[gi] = np.mean(npass) #mean num passes
+        #meannp[gi] = np.mean(npass) #mean num passes
+        meannp[ai] = np.mean(npass) #mean num passes
             
     
-        gi+=1
+        #gi+=1
+        ai+=1
     return IFD, DFD, meansn, meannt, sn_error, nt_error
 
-x = run_sim(adiv, gdivvals, numfuncs, numagents, numtasks, agspread, anorm, tnorm, numrepeats, stop, close_agents_size)
+#x = run_sim(adiv, gdivvals, numfuncs, numagents, numtasks, agspread, anorm, tnorm, numrepeats, stop, close_agents_size)
+x = run_sim(adivvals, gdiv, numfuncs, numagents, numtasks, agspread, anorm, tnorm, numrepeats, stop, close_agents_size)
 
 def plotting(IFD, DFD, meansn, meannt, sn_error, nt_error, numtasks, numagents, stop, numrepeats, close_agents_size):
     
     #dfd is x axes and y is time taken
     #plt.plot(DFD, meansn, linestyle='--', marker='o', color='b', label='line with marker')
-    plt.scatter(DFD, meansn)
-    plt.errorbar(DFD, meansn, yerr=sn_error, color='red',fmt = 'o', capsize=5, capthick=1, ecolor='black')
+    #plt.scatter(DFD, meansn)
+    plt.scatter(IFD, meansn)
+    #plt.errorbar(DFD, meansn, yerr=sn_error, color='red',fmt = 'o', capsize=5, capthick=1, ecolor='black')
+    plt.errorbar(IFD, meansn, yerr=sn_error, color='red',fmt = 'o', capsize=5, capthick=1, ecolor='black')
     #plt.errorbar(DFD, meansn, yerr=sn_error)
     #Time veiw 1
     plt.xlabel('DFD',fontsize=10)
@@ -129,8 +146,10 @@ def plotting(IFD, DFD, meansn, meannt, sn_error, nt_error, numtasks, numagents, 
     
     #dfd is x axes and y is time taken
     #plt.plot(DFD, meansn, linestyle='--', marker='o', color='b', label='line with marker')
-    plt.scatter(DFD, meannt)
-    plt.errorbar(DFD, meannt, yerr=nt_error, color='red', fmt='o', capsize=5, capthick=1, ecolor='black')
+    #plt.scatter(DFD, meannt)
+    plt.scatter(IFD, meannt)
+    #plt.errorbar(DFD, meannt, yerr=nt_error, color='red', fmt='o', capsize=5, capthick=1, ecolor='black')
+    plt.errorbar(IFD, meannt, yerr=nt_error, color='red', fmt='o', capsize=5, capthick=1, ecolor='black')
     #plt.errorbar(DFD, meannt, yerr=nt_error)
     #Time veiw 1
     plt.xlabel('DFD',fontsize=10)

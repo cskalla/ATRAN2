@@ -9,6 +9,7 @@ Created on Wed Sep 29 10:50:57 2021
 import numpy as np
 import passing
 import random
+import calc_threshold
     
 def euc_dist(list1, list2, a1, a2):
     #get agents 
@@ -39,7 +40,7 @@ def gen_dist_matrix(agents):
                 d = euc_dist(agents, agents, i, j)
                 matrix[i][j] = d
                 matrix[j][i] = d
-    matrix[matrix == 0] = float('inf')
+    #matrix[matrix == 0] = float('inf')
     return(matrix)
 
     #array version
@@ -63,6 +64,23 @@ def close_agents(agents, close_agent_size):
         #agent_circle = close_agents[0:close_agent_size]
         close_agent_matrix[a_ind] = agent_circle
     return close_agent_matrix
+
+def display_small_circles(agents, relative_threshold):
+    #threshold = calc_threshold.calc_threshold(agents, relative_threshold)
+    threshold = relative_threshold
+    len_circle = np.zeros((len(agents)))
+    print("threshold:", threshold)
+    #get distance matrix
+    matrix = gen_dist_matrix(agents)
+    print(matrix)
+    for i in range(len(matrix)):
+        print("Agent:", i)
+        close_friends = matrix[i]
+        print(close_friends)
+        close_friends = close_friends[close_friends < threshold]
+        print("Close friends:", len(close_friends))
+        len_circle[i] = len(close_friends)
+    return np.mean(len_circle)
         
     
     

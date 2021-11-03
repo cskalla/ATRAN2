@@ -12,11 +12,16 @@ import similarity
 
 
 
-agents = np.array([[0,0,0], [1,1,1], [2,2,2]])
-x = agents[np.any(agents > 0, axis =1)]
-print(x)
+#agents = np.array([[0,0,0], [1,1,1], [2,2,2]])
+#x = agents[np.any(agents > 0, axis =1)]
+#print(x)
 
+r = np.arange(3)
 
+mat = np.zeros((len(r), len(r)))
+
+print(r)
+print(mat)
 
 
 

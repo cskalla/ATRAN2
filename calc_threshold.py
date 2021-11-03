@@ -10,8 +10,11 @@ import numpy as np
 
 def calc_threshold(agents, threshold):
     matrix = similarity.gen_dist_matrix(agents)
-    a_min = np.amin(matrix)
     a_max = np.amax(matrix)
+    #change zeros to inf to get real mins
+    matrix[matrix == 0] = float('inf')
+    a_min = np.amin(matrix)
+   
     
     #0.7 would indicate that the threshold is at the 70% of the range of distances
     t = a_min + (threshold*(a_max - a_min))

@@ -44,8 +44,9 @@ numtasks = 10
 agspread = 10
 anorm = 10
 tnorm = 10
-numrepeats = 20
+numrepeats =5
 stop = 500
+close_agent_size = 3
 #max_agents_to_task = numagents/10
 #sim_threshold = 0.25 #similarity threshold - could be changed later??
 #sim_threshold = 0 #full communication
@@ -84,7 +85,7 @@ def run_sim(adivvals, gdivvals, numfuncs, numagents, numtasks, agspread, anorm, 
                 #ASSIGN TASKS
                 #index = assign3.init_assign_tasks(agents, tasks, s_t, max_agents_to_task, abandon_timer)
                 #WORK ON TASKS
-                sn[ridx], nt[ridx], npass[ridx] = complete_tasks.solve(agents, tasks)    
+                sn[ridx], nt[ridx], npass[ridx] = complete_tasks.solve(agents, tasks, close_agent_size)    
                 #save results for trial
                 minsn[ai, gi] = min(sn)
                 maxsn[ai, gi] = max(sn)
