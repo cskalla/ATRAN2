@@ -38,8 +38,8 @@ print(adivvals)
 print("\n")
 print(gdivvals)
 stop = 500
-fixed_threshold = 1
-#relative_threshold = 1
+#fixed_threshold = 1
+#relative_threshold = 0.8
 
 #choose aDiv and gDiv from above options
 #adiv = 15 #high IFD
@@ -63,9 +63,9 @@ for adiv in adivvals:
 #tasks = generate_tasks.gen_tasks(numfuncs, numtasks, tnorm)
 
 #complete_tasks.solve(agents, tasks, close_agents_size)
+        relative_threshold = IFD[ai, gi]
 
-
-        num_friends[ai][gi] = similarity.display_small_circles(agents, fixed_threshold)
+        num_friends[ai][gi] = similarity.display_small_circles(agents, relative_threshold)
         gi+=1
     ai+=1
     
@@ -77,8 +77,16 @@ plt.title("Average number of agents willing to share information with across tea
 ax.set_xlabel('IFD')
 ax.set_ylabel('DFD')
 ax.set_zlabel('Average number of agents')
-plt.figtext(.5, -0.05,  "Parameters:  Total number of agents =  " + str(numagents) + ", Fixed similarity threshold = " + str(fixed_threshold), ha="center", fontsize=10)
+plt.figtext(.5, -0.05,  "Parameters:  Total number of agents =  " + str(numagents) + ", Fixed similarity threshold = " + str(relative_threshold), ha="center", fontsize=10)
 #fig.colorbar(fig, ax=ax)
 plt.colorbar(im, ax=ax,label="Average number of agents", orientation="vertical", pad = 0.15)
 #plt.show()
-plt.savefig('information_sharing6.png')
+#plt.savefig('information_sharing6.png')
+plt.show()
+"""
+# rotate the axes and update
+for angle in range(0, 360):
+    ax.view_init(30, angle)
+    plt.draw()
+    plt.pause(.001)
+"""

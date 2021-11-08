@@ -23,6 +23,11 @@ def euc_dist(list1, list2, a1, a2):
     #print(np.sqrt(sum_sq))
     return np.sqrt(sum_sq)
 
+def euc_dist_array(list1, list2, t):
+        task = list2[t]
+        sum_sq = np.sum(np.square(list1 - task))
+        return np.sqrt(sum_sq)
+        
 def gen_euc_dist_matrix(agents):
    
     a, b= np.meshgrid(agents,agents)
@@ -66,8 +71,8 @@ def close_agents(agents, close_agent_size):
     return close_agent_matrix
 
 def display_small_circles(agents, relative_threshold):
-    #threshold = calc_threshold.calc_threshold(agents, relative_threshold)
-    threshold = relative_threshold
+    threshold = calc_threshold.calc_threshold(agents, relative_threshold)
+    #threshold = relative_threshold
     len_circle = np.zeros((len(agents)))
     print("threshold:", threshold)
     #get distance matrix
@@ -81,12 +86,29 @@ def display_small_circles(agents, relative_threshold):
         print("Close friends:", len(close_friends))
         len_circle[i] = len(close_friends)
     return np.mean(len_circle)
+
+def return_small_circles(i, agents, relative_threshold, dist_matrix):
+    
+    #threshold = calc_threshold.calc_threshold(agents, relative_threshold)
+    #threshold = relative_threshold
+    #len_circle = np.zeros((len(agents)))
+    #print("threshold:", threshold)
+  
+  
+    close_friends = dist_matrix[i]
+    #print(close_friends)
+    options = np.arange(len(close_friends))
+    close_friends = options[close_friends < relative_threshold]
+    #print("Close friends:", len(close_friends))
+    #len_circle[i] = len(close_friends)
+    #return np.mean(len_circle)
+    return close_friends
     
    
 #generate close agent matrix using a threshold (no fixed size, based on similarity)
 def close_agents_from_threshold(i,agents, relative_threshold):  
-    #threshold = calc_threshold.calc_threshold(agents, relative_threshold)
-    threshold = relative_threshold
+    threshold = calc_threshold.calc_threshold(agents, relative_threshold)
+    #threshold = relative_threshold
     dist_matrix = gen_dist_matrix(agents)
     close_agents = np.argsort(dist_matrix[i])
     #close_agent_matrix.fill(float('inf'))

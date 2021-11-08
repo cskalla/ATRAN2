@@ -23,6 +23,7 @@ end
     tasks = np.random.rand(ntasks,nfuncs)
 
     tasks = (np.divide(tasks.T,np.sum(tasks, axis=1)).T)*tnorm
+    tasks = np.reshape(tasks,(ntasks, nfuncs))
     return tasks
 
     

@@ -11,7 +11,29 @@ import similarity
 import copy
 import calc_threshold
 
-def pick_close_agent(a_ind, close_agent_matrix, close_agents_size):
+#find agents for stuck agents to pass to
+def pass_new_agent(tasks, agents, a_ind, stuck_tasks, threshold, dist_matrix):
+    #for each stuck task:
+    for task in stuck_tasks:
+        #identify current agent
+        a_i = a_ind[task]
+        #identify agents that the current agent is willing to talk to
+        close_friends = similarity.return_small_circles(a_i, agents, threshold, dist_matrix)
+        print("close_friends", close_friends)
+        #identify which of these agents are not busy
+        free_friends = close_friends[np.invert(np.isin(close_friends, a_ind))]
+        print("free friends", free_friends)
+        if len(free_friends) == 0:
+            continue
+        #choose the one that is closest to the task
+        distances = similarity.euc_dist_array(agents[free_friends], tasks, task)
+        a_ind[task] = free_friends[np.argmin(distances)]
+        
+    #return new a_ind
+    return a_ind
+    
+
+def pick_close_agent(a_ind, close_agent_matrix, close_agents_size, tasks, task_ind):
         #print("current agent: agent #", a_ind)
 
         #sort the distance matrix
@@ -22,16 +44,17 @@ def pick_close_agent(a_ind, close_agent_matrix, close_agents_size):
         #print("agent circle is:", agent_circle)
         #pick a random agent from the small cirle to pass the task to
         
+        #Passes to most dissimilar agent
         agent_circle = close_agent_matrix[a_ind]
         #print(close_agent_matrix)
         #print(agent_circle)
+        """
         p = pass_prob(close_agents_size)
         a_ind = np.random.choice(agent_circle, replace=True, p=p)
-        #print(a_ind)
-        #print("passes to: agent #", a_ind)
-        #agent_task_dist = similarity.euc_dist(agents, tasks, a_ind, 0)
-        #print("new agent task distance:", agent_task_dist)
-       # print("\n")
+        """
+        a_ind = agent_task_dist(agent_circle, tasks, task_ind)
+        #pass to most qualified agent
+        
         return int(a_ind)
     
     
@@ -69,8 +92,12 @@ def pass_prob(close_agents_size):
     x = np.exp(-(np.arange(close_agents_size)**2)/3)
     y = x/np.sum(x)
     return y[::-1]   
-        
-        
-    
 
-            
+#returns the indice of the most qaulified agent
+def agent_task_dist(agent_circle, tasks, task_ind):
+    #make array of distances between task and agents in close circle
+    agent_order = similarity.euc_dist_array(agent_circle, tasks, task_ind)
+    a_ind = np.argmin(agent_order)
+    return a_ind
+    
+    

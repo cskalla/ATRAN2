@@ -16,74 +16,54 @@ import copy
 
 def solve(agents, tasks, close_agents_size):
     
-    #print("task:", tasks)
+    #calculate relative threshold
+    threshold = calc_threshold.calc_threshold(agents, close_agents_size)
+    #calculate the distances between the agents 
+    dist_matrix = similarity.gen_dist_matrix(agents)
     
     #allocate agents to tasks
-    #a_ind = np.random.choice(np.arange(0,len(tasks)-1), size=(len(tasks)))
-    ###########
-    #fill indices array with -1s
-    index = np.arange(len(agents))
-    index.fill(-1)
-    a_ind = np.random.choice(np.arange(len(tasks)), size =len(index))
-    #random.shuffle(index)
-    #give a task to 
-    ###########
-    
-    #print("First agent assigned:", a_ind)
-    
-    #find the euclidean distance between the task and the agent
-    #agent_task_dist = similarity.euc_dist(agents, tasks, a_ind, 0)
-    #generate distance matrix
-    dist_matrix = similarity.gen_dist_matrix(agents)
-    close_agent_matrix = similarity.close_agents(agents, close_agents_size)
-    #calculate a similarity threshold
-    #threshold = calc_threshold.calc_threshold(agents, 0.65)
-   
-    #replace zeros with inf so that agents won't pass to themselves
-    #dist_matrix[dist_matrix == 0] = float('inf')
-    stop = 500
-    
-    num_passes = 0
-    
+    a_ind = np.random.choice(np.arange(0,len(agents)-1), size=(len(tasks)))
+  
+  
+    stop = 2000
+    tasks_completed = 0
     time = 0
     #complete tasks
-    while np.any([np.any(task > 0) for task in tasks]) and time != stop:
+    while len(tasks) > 0 and time != stop:
         
-        #print("time step:", time)
-        #repeat for each task
-        for i in range(len(a_ind)):
-           
-            progress = copy.deepcopy(tasks[i])
-            #locs = np.where(tasks == progress)
-            
-            #agents work
-            tasks[a_ind[i]] = tasks[a_ind[i]] - agents[i]
-            #set negative values to 0 
-            tasks[a_ind[i]][tasks[a_ind[i]] < 0] = 0
-            
-            #if task is complete, cut loop
-            if np.all(tasks[a_ind[i]] == 0):
-                #unassign completed task
-                a_ind[i] = -1
-                #assign new task to agent
-                a_ind[i] = passing.get_new_task(i, a_ind, tasks)
-                
-                continue
+        #for each time step:
         
-            #check if the agent is stuck and force pass
-            change = progress - tasks[a_ind[i]]
-            #print("task status:", tasks[a_ind[i]])
-            #print("change:", change)
-            if np.all(change < 1):
-                #scan agents to pass
-                #print("agent", i, " is stuck")
-                candidate = passing.pick_close_agent(i, close_agent_matrix, close_agents_size)
-                #swap tasks
-                cand_task = a_ind[candidate]
-                a_ind[candidate] = a_ind[i]
-                a_ind[i] = cand_task
-                #print("task was passed to", a_ind[i])
-                num_passes += 1
+        #mark progress
+        progress = copy.deepcopy(tasks)
+        #tasks work
+        tasks = tasks - agents[a_ind,:]
+        #tasks[tasks < 0] = 0 #set negative values to 0
+        tasks = np.where(tasks < 0, 0, tasks)
+        
+        #check if any tasks are stuck
+        t = np.arange(len(tasks))
+        stuck_tasks = t[np.all(progress - tasks < 1, axis = 1)] #returns t or f for every index of task array
+        print("stuck tasks: ",stuck_tasks)
+        
+        #find a new agent for stuck tasks
+        a_ind = passing.pass_new_agent(tasks, agents, a_ind, stuck_tasks, threshold, dist_matrix)
+        print("a_ind:", a_ind)
+        
+        #check for completed tasks
+        finished = np.all(tasks <= 0, axis = 1).transpose()
+        print("num finished tasks", len(tasks[finished]))
+        
+        #increase completed tasks counter
+        tasks_completed += len(tasks[finished])
+        
+        if len(tasks[finished] > 0):
+            #erase tasks
+            tasks = np.delete(tasks, t[finished], axis=0)
+            #erase task in a_ind to free agent
+            a_ind = np.delete(a_ind, t[finished], axis=0)
+        
+      
+        
                 
         time += 1
     #print("Sim end!")
@@ -97,10 +77,10 @@ def solve(agents, tasks, close_agents_size):
             num_task_completed += 1
             
      """       
-    num_task_completed = len(tasks[np.all(tasks <= 0, axis =1)])
+   
     
-    #print("num tasks completed",num_task_completed)
-    return time, num_task_completed, num_passes
+    #print("num tasks completed",tasks_completed)
+    return time, tasks_completed
     
     
     

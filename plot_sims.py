@@ -34,19 +34,19 @@ import complete_tasks
 #gdivvals = np.logspace(-1, 3, 10)
 
 
-adivvals = 10**(np.linspace(0.1, 0.2, 40)*(np.linspace(-6, 7, 40)))
-gdivvals = 10**(0.2*np.linspace(-3, 5, 20))
+adivvals = 10**(np.linspace(0.1, 0.2, 20)*(np.linspace(-6, 7, 20)))
+gdivvals = 10**(0.2*np.linspace(-3, 5, 10))
 
 
 numfuncs = 9
 numagents = 10
-numtasks = 10
+numtasks = 1
 agspread = 10
 anorm = 10
 tnorm = 10
-numrepeats =5
+numrepeats =10
 stop = 500
-close_agent_size = 3
+#close_agent_size = 3
 #max_agents_to_task = numagents/10
 #sim_threshold = 0.25 #similarity threshold - could be changed later??
 #sim_threshold = 0 #full communication
@@ -55,13 +55,13 @@ def run_sim(adivvals, gdivvals, numfuncs, numagents, numtasks, agspread, anorm, 
     
     
 
-    DFD = np.zeros((40,20))
-    IFD = np.zeros((40,20))
-    minsn = np.zeros((40, 20))
-    maxsn = np.zeros((40, 20))
-    meansn = np.zeros((40, 20)) #time
-    meannt = np.zeros((40, 20)) #num tasks solved
-    meannp = np.zeros((40, 20)) #num passes
+    DFD = np.zeros((20,10))
+    IFD = np.zeros((20,10))
+    minsn = np.zeros((20, 10))
+    maxsn = np.zeros((20, 10))
+    meansn = np.zeros((20, 10)) #time
+    meannt = np.zeros((20, 10)) #num tasks solved
+    meannp = np.zeros((20, 10)) #num passes
     
     
     #begin simulation
@@ -74,6 +74,7 @@ def run_sim(adivvals, gdivvals, numfuncs, numagents, numtasks, agspread, anorm, 
             
             #Calculate and store diversity values
             [DFD[ai, gi], IFD[ai, gi]] = calc_fd.calc_fd(agents)
+            relative_threshold = 0.8
             nt = np.zeros(numrepeats)
             sn = np.zeros(numrepeats)
             npass = np.zeros(numrepeats)
@@ -85,13 +86,13 @@ def run_sim(adivvals, gdivvals, numfuncs, numagents, numtasks, agspread, anorm, 
                 #ASSIGN TASKS
                 #index = assign3.init_assign_tasks(agents, tasks, s_t, max_agents_to_task, abandon_timer)
                 #WORK ON TASKS
-                sn[ridx], nt[ridx], npass[ridx] = complete_tasks.solve(agents, tasks, close_agent_size)    
+                sn[ridx], nt[ridx] = complete_tasks.solve(agents, tasks, relative_threshold)    
                 #save results for trial
                 minsn[ai, gi] = min(sn)
                 maxsn[ai, gi] = max(sn)
                 meansn[ai, gi] = np.mean(sn)
                 meannt[ai, gi] = np.mean(nt)
-                meannp[ai, gi] = np.mean(npass)
+               
                 
         
             gi+=1
