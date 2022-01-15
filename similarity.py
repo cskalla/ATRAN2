@@ -52,8 +52,8 @@ def gen_dist_matrix(agents):
     #d1 = np.arange(len(agents))
 
 #determines the close agents once at the beginning of the simulation
-def close_agents(agents, close_agent_size):
-    dist_matrix = gen_dist_matrix(agents)
+def close_agents(agents, close_agent_size, dist_matrix):
+   # dist_matrix = gen_dist_matrix(agents)
     close_agent_matrix = np.zeros((len(agents),close_agent_size))
     #sort the distance matrix
     for a_ind in range(len(agents)):

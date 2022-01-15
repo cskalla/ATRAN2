@@ -39,12 +39,12 @@ gdivvals = 10**(0.2*np.linspace(-3, 5, 10))
 
 
 numfuncs = 9
-numagents = 10
-numtasks = 1
+numagents = 100
+numtasks = 10
 agspread = 10
 anorm = 10
 tnorm = 10
-numrepeats =10
+numrepeats = 5
 stop = 500
 #close_agent_size = 3
 #max_agents_to_task = numagents/10
@@ -74,7 +74,7 @@ def run_sim(adivvals, gdivvals, numfuncs, numagents, numtasks, agspread, anorm, 
             
             #Calculate and store diversity values
             [DFD[ai, gi], IFD[ai, gi]] = calc_fd.calc_fd(agents)
-            relative_threshold = 0.8
+            relative_threshold = 3
             nt = np.zeros(numrepeats)
             sn = np.zeros(numrepeats)
             npass = np.zeros(numrepeats)
@@ -113,7 +113,7 @@ def plotting(IFD, DFD, meansn, meannt):
   
     fig2 = plt.figure()
     axes = fig2.gca(projection ='3d')
-    axes.plot_surface(IFD, DFD, meansn)
+    axes.plot_surface(IFD, DFD, meansn, cmap='GnBu_r')
 
     #Time veiw 1
     plt.xlabel('IFD',fontsize=10)
@@ -128,20 +128,20 @@ def plotting(IFD, DFD, meansn, meannt):
     #Num tasks veiw 1
     fig2 = plt.figure()
     axes = fig2.gca(projection ='3d')
-    axes.plot_surface(IFD, DFD, meannt)
+    axes.plot_surface(IFD, DFD, meannt, cmap='GnBu_r')
     
     plt.xlabel('IFD',fontsize=10)
     plt.ylabel('DFD',fontsize=10)
     axes.set_zlabel('Number of tasks completed', fontsize=10)
     plt.title("Agents Pass to small circle")
-    plt.figtext(.5, 0.0,  + ", num tasks = " + str(numtasks) +  ", num agents = " + str(numagents) + ", Emergency stop = " + str(stop) + ", num repeats = " + str(numrepeats), ha="center", fontsize=10)
+    plt.figtext(.5, 0.0,  ", num tasks = " + str(numtasks) +  ", num agents = " + str(numagents) + ", Emergency stop = " + str(stop) + ", num repeats = " + str(numrepeats), ha="center", fontsize=10)
     plt.show()
     
    
     
     
    
-
+  
   
 
 plotting(x[0], x[1], x[2], x[3])   

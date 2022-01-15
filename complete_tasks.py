@@ -17,7 +17,8 @@ import copy
 def solve(agents, tasks, close_agents_size):
     
     #calculate relative threshold
-    threshold = calc_threshold.calc_threshold(agents, close_agents_size)
+    #threshold = calc_threshold.calc_threshold(agents, close_agents_size)
+    threshold = close_agents_size
     #calculate the distances between the agents 
     dist_matrix = similarity.gen_dist_matrix(agents)
     
@@ -25,7 +26,7 @@ def solve(agents, tasks, close_agents_size):
     a_ind = np.random.choice(np.arange(0,len(agents)-1), size=(len(tasks)))
   
   
-    stop = 2000
+    stop = 500
     tasks_completed = 0
     time = 0
     #complete tasks
