@@ -97,7 +97,7 @@ agents = generate_agents.gen_agents(numfuncs, numagents, [adiv, agspread], (np.e
 dfd, ifd = calc_fd(agents)
 
 domf = np.exp(-(np.arange(numfuncs)**2)/gdiv)
-print(domf)
-print(np.sum(domf))
+#print(domf)
+#print(np.sum(domf))
 #normalize so that sum = 1 (requirement of python choice function)
-print(domf/np.sum(domf))
+#print(domf/np.sum(domf))

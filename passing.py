@@ -19,10 +19,10 @@ def pass_new_agent(tasks, agents, a_ind, stuck_tasks, threshold, dist_matrix):
         a_i = a_ind[task]
         #identify agents that the current agent is willing to talk to
         close_friends = similarity.return_small_circles(a_i, agents, threshold, dist_matrix)
-        print("close_friends", close_friends)
+        #print("close_friends", close_friends)
         #identify which of these agents are not busy
         free_friends = close_friends[np.invert(np.isin(close_friends, a_ind))]
-        print("free friends", free_friends)
+        #print("free friends", free_friends)
         if len(free_friends) == 0:
             continue
         #choose the one that is closest to the task
@@ -83,7 +83,7 @@ def get_new_task(i, a_ind, tasks):
         return -1
     else:
         task = unclaimed_uncomplete[random.randint(0, len(unclaimed_uncomplete) -1)]
-        print(task)
+        #print(task)
         #return unclaimed_uncomplete[random.randint(0, len(unclaimed_uncomplete) -1)]
         return task
         

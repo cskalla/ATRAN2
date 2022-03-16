@@ -17,13 +17,13 @@ import copy
 def solve(agents, tasks, close_agents_size):
     
     #calculate relative threshold
-    #threshold = calc_threshold.calc_threshold(agents, close_agents_size)
+    threshold = calc_threshold.calc_threshold(agents, close_agents_size)
     threshold = close_agents_size
     #calculate the distances between the agents 
     dist_matrix = similarity.gen_dist_matrix(agents)
     
     #allocate agents to tasks
-    a_ind = np.random.choice(np.arange(0,len(agents)-1), size=(len(tasks)))
+    a_ind = np.random.choice(np.arange(0,len(agents)-1), size=(len(tasks)), replace=False)
   
   
     stop = 500
@@ -43,23 +43,24 @@ def solve(agents, tasks, close_agents_size):
         
         #check if any tasks are stuck
         t = np.arange(len(tasks))
-        stuck_tasks = t[np.all(progress - tasks < 1, axis = 1)] #returns t or f for every index of task array
-        print("stuck tasks: ",stuck_tasks)
+        x = np.divide(progress - tasks, tasks)
+        stuck_tasks = t[np.logical_not(np.any(np.logical_and(x != float('inf'), x > 0.1), axis=1))] #returns t or f for every index of task array
+        #print("stuck tasks: ",stuck_tasks)
         
         #find a new agent for stuck tasks
         a_ind = passing.pass_new_agent(tasks, agents, a_ind, stuck_tasks, threshold, dist_matrix)
-        print("a_ind:", a_ind)
+        #print("a_ind:", a_ind)
         
         #check for completed tasks
         finished = np.all(tasks <= 0, axis = 1).transpose()
-        print("num finished tasks", len(tasks[finished]))
+       # print("num finished tasks", len(tasks[finished]))
         
         #increase completed tasks counter
-        tasks_completed += len(tasks[finished])
+        tasks_completed += np.sum(finished)
         
-        if len(tasks[finished] > 0):
+        if np.any(finished):
             #erase tasks
-            tasks = np.delete(tasks, t[finished], axis=0)
+            tasks = np.delete(tasks, finished, axis=0)
             #erase task in a_ind to free agent
             a_ind = np.delete(a_ind, t[finished], axis=0)
         

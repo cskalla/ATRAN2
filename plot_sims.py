@@ -27,6 +27,7 @@ import calc_threshold
 import solve3
 import assign3
 import complete_tasks
+import timeit
 
 
 #Parameters
@@ -44,7 +45,7 @@ numtasks = 10
 agspread = 10
 anorm = 10
 tnorm = 10
-numrepeats = 5
+numrepeats = 100
 stop = 500
 #close_agent_size = 3
 #max_agents_to_task = numagents/10
@@ -63,7 +64,7 @@ def run_sim(adivvals, gdivvals, numfuncs, numagents, numtasks, agspread, anorm, 
     meannt = np.zeros((20, 10)) #num tasks solved
     meannp = np.zeros((20, 10)) #num passes
     
-    
+    start = timeit.default_timer()
     #begin simulation
     ai = 0
     for adiv in adivvals:
@@ -74,10 +75,12 @@ def run_sim(adivvals, gdivvals, numfuncs, numagents, numtasks, agspread, anorm, 
             
             #Calculate and store diversity values
             [DFD[ai, gi], IFD[ai, gi]] = calc_fd.calc_fd(agents)
-            relative_threshold = 3
+            relative_threshold = IFD[ai, gi]
             nt = np.zeros(numrepeats)
             sn = np.zeros(numrepeats)
             npass = np.zeros(numrepeats)
+            
+            start = timeit.default_timer()
             for ridx in range(numrepeats):
                 #create abandon timer
                 #abandon_timer = np.zeros(len(agents))
@@ -97,8 +100,10 @@ def run_sim(adivvals, gdivvals, numfuncs, numagents, numtasks, agspread, anorm, 
         
             gi+=1
         ai+=1
+        
+        #print(stop-start)
     return IFD, DFD, meansn, meannt
-
+stop = timeit.default_timer()
 x = run_sim(adivvals, gdivvals, numfuncs, numagents, numtasks, agspread, anorm, tnorm, numrepeats, stop)
 
 def plotting(IFD, DFD, meansn, meannt):
@@ -119,7 +124,7 @@ def plotting(IFD, DFD, meansn, meannt):
     plt.xlabel('IFD',fontsize=10)
     plt.ylabel('DFD',fontsize=10)
     axes.set_zlabel('Time', fontsize=10)
-    plt.title("Agents Pass to small circle")
+    plt.title("Time taken to complete all tasks (Relative threshold = 0.8)")
     plt.figtext(.5, 0.0, "num tasks = " + str(numtasks) +  ", num agents = " + str(numagents) + ", Emergency stop = " + str(stop) + ", num repeats = " + str(numrepeats), ha="center", fontsize=10)
     plt.show()
 
@@ -133,7 +138,7 @@ def plotting(IFD, DFD, meansn, meannt):
     plt.xlabel('IFD',fontsize=10)
     plt.ylabel('DFD',fontsize=10)
     axes.set_zlabel('Number of tasks completed', fontsize=10)
-    plt.title("Agents Pass to small circle")
+    plt.title("Number of tasks completed (Relative threshold = 0.8)")
     plt.figtext(.5, 0.0,  ", num tasks = " + str(numtasks) +  ", num agents = " + str(numagents) + ", Emergency stop = " + str(stop) + ", num repeats = " + str(numrepeats), ha="center", fontsize=10)
     plt.show()
     

@@ -25,7 +25,7 @@ def euc_dist(list1, list2, a1, a2):
 
 def euc_dist_array(list1, list2, t):
         task = list2[t]
-        sum_sq = np.sum(np.square(list1 - task))
+        sum_sq = np.sum(np.square(list1 - task),axis=1)
         return np.sqrt(sum_sq)
         
 def gen_euc_dist_matrix(agents):
@@ -74,16 +74,16 @@ def display_small_circles(agents, relative_threshold):
     threshold = calc_threshold.calc_threshold(agents, relative_threshold)
     #threshold = relative_threshold
     len_circle = np.zeros((len(agents)))
-    print("threshold:", threshold)
+    #print("threshold:", threshold)
     #get distance matrix
     matrix = gen_dist_matrix(agents)
-    print(matrix)
+    #print(matrix)
     for i in range(len(matrix)):
-        print("Agent:", i)
+        #print("Agent:", i)
         close_friends = matrix[i]
-        print(close_friends)
+        #print(close_friends)
         close_friends = close_friends[close_friends < threshold]
-        print("Close friends:", len(close_friends))
+        #print("Close friends:", len(close_friends))
         len_circle[i] = len(close_friends)
     return np.mean(len_circle)
 
