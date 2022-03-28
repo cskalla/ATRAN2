@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Thu Oct 28 17:57:27 2021
+Created on Mon Mar 28 09:25:19 2022
 
 @author: carolineskalla
 """
+
+#plots the maximum distance between agents on a team across IFD DFD plane
 
 
 #import all code files
@@ -28,7 +30,7 @@ import solve3
 import assign3
 import complete_tasks
 import timeit
-
+import similarity
 
 #Parameters
 #adivvals = np.logspace(-1, 3, 20)
@@ -45,7 +47,7 @@ numtasks = 10
 agspread = 10
 anorm = 10
 tnorm = 10
-numrepeats = 20
+numrepeats = 100
 stop = 500
 #close_agent_size = 3
 #max_agents_to_task = numagents/10
@@ -58,11 +60,8 @@ def run_sim(adivvals, gdivvals, numfuncs, numagents, numtasks, agspread, anorm, 
 
     DFD = np.zeros((20,10))
     IFD = np.zeros((20,10))
-    minsn = np.zeros((20, 10))
-    maxsn = np.zeros((20, 10))
-    meansn = np.zeros((20, 10)) #time
-    meannt = np.zeros((20, 10)) #num tasks solved
-    meannp = np.zeros((20, 10)) #num passes
+    distances = np.zeros((20, 10))
+  
     
     start = timeit.default_timer()
     #begin simulation
@@ -75,26 +74,12 @@ def run_sim(adivvals, gdivvals, numfuncs, numagents, numtasks, agspread, anorm, 
             
             #Calculate and store diversity values
             [DFD[ai, gi], IFD[ai, gi]] = calc_fd.calc_fd(agents)
-            relative_threshold =  IFD[ai, gi]
-            nt = np.zeros(numrepeats)
-            sn = np.zeros(numrepeats)
-            npass = np.zeros(numrepeats)
+            #relative_threshold = IFD[ai, gi]
+            matrix = similarity.gen_dist_matrix(agents)
+            a_max = np.amax(matrix)
+            distances[ai][gi] = a_max
             
-            start = timeit.default_timer()
-            for ridx in range(numrepeats):
-                #create abandon timer
-                #abandon_timer = np.zeros(len(agents))
-                #Generate tasks
-                tasks = generate_tasks.gen_tasks(numfuncs, numtasks, tnorm)
-                #ASSIGN TASKS
-                #index = assign3.init_assign_tasks(agents, tasks, s_t, max_agents_to_task, abandon_timer)
-                #WORK ON TASKS
-                sn[ridx], nt[ridx] = complete_tasks.solve(agents, tasks, relative_threshold)    
-                #save results for trial
-                minsn[ai, gi] = min(sn)
-                maxsn[ai, gi] = max(sn)
-                meansn[ai, gi] = np.mean(sn)
-                meannt[ai, gi] = np.mean(nt)
+              
                
                 
         
@@ -102,11 +87,11 @@ def run_sim(adivvals, gdivvals, numfuncs, numagents, numtasks, agspread, anorm, 
         ai+=1
         
         #print(stop-start)
-    return IFD, DFD, meansn, meannt
+    return IFD, DFD, distances
 stop = timeit.default_timer()
 x = run_sim(adivvals, gdivvals, numfuncs, numagents, numtasks, agspread, anorm, tnorm, numrepeats, stop)
 
-def plotting(IFD, DFD, meansn, meannt):
+def plotting(IFD, DFD, distances):
     #surface plot
     # target grid to interpolate to
     xi = np.arange(0,1.01,0.0001)
@@ -114,39 +99,29 @@ def plotting(IFD, DFD, meansn, meannt):
     xi,yi = np.meshgrid(xi,yi)
 
     # interpolate
-    zi = griddata((IFD.flatten(),DFD.flatten()),meansn.flatten(),(xi,yi),method='linear')
+    zi = griddata((IFD.flatten(),DFD.flatten()),distances.flatten(),(xi,yi),method='linear')
   
     fig2 = plt.figure()
     axes = fig2.gca(projection ='3d')
-    axes.plot_surface(IFD, DFD, meansn, cmap='GnBu_r')
+    axes.plot_surface(IFD, DFD, distances, cmap='GnBu_r')
 
     #Time veiw 1
     plt.xlabel('IFD',fontsize=10)
     plt.ylabel('DFD',fontsize=10)
-    axes.set_zlabel('Time', fontsize=10)
-    plt.title("Time taken to complete all tasks (Relative threshold = IFD)")
+    axes.set_zlabel('Max distance between any two agents', fontsize=10)
+    plt.title("Max distances between any two agents")
     plt.figtext(.5, 0.0, "num tasks = " + str(numtasks) +  ", num agents = " + str(numagents) + ", Emergency stop = " + str(stop) + ", num repeats = " + str(numrepeats), ha="center", fontsize=10)
     plt.show()
 
 
     
-    #Num tasks veiw 1
-    fig2 = plt.figure()
-    axes = fig2.gca(projection ='3d')
-    axes.plot_surface(IFD, DFD, meannt, cmap='GnBu_r')
-    
-    plt.xlabel('IFD',fontsize=10)
-    plt.ylabel('DFD',fontsize=10)
-    axes.set_zlabel('Number of tasks completed', fontsize=10)
-    plt.title("Number of tasks completed (Relative threshold = IFD)")
-    plt.figtext(.5, 0.0,  ", num tasks = " + str(numtasks) +  ", num agents = " + str(numagents) + ", Emergency stop = " + str(stop) + ", num repeats = " + str(numrepeats), ha="center", fontsize=10)
-    plt.show()
-    
-   
     
     
    
   
   
 
-plotting(x[0], x[1], x[2], x[3])   
+plotting(x[0], x[1], x[2])
+
+
+ 
